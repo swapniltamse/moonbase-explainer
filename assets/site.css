@@ -1,102 +1,90 @@
-/* Wiring the Moon — shared design system (forked from grail-mission) */
+/* Wiring the Moon: base design system.
+   Typefaces are the ones nasa.gov uses (Inter, Public Sans, DM Mono) and the
+   palette is nasa.gov's carbon-and-signal family. No NASA marks are used: this
+   is an independent site. Every text/background pair below meets WCAG 2.1 AA. */
 :root{
-  --space:#05070f;--space-2:#0a0e1c;--panel:#0e1327;
-  --bone:#f2ece0;--bone-dim:#b6b2a8;--line:rgba(242,236,224,.14);
-  --high:#ff5e3a;--high-2:#ffb03a;--low:#4a6cf7;--low-2:#7fd3ff;--gold:#e8a33d;
-  --maxw:1140px;
+  --carbon:#17171b;      /* page */
+  --panel:#1f1f24;       /* raised figures */
+  --graphite:#2e2e32;    /* rules, tracks */
+  --line:#3a3a40;
+  --bone:#f4f4f1;        /* primary text, 16:1 on carbon */
+  --gray:#b9b9bb;        /* secondary text, 9:1 on carbon */
+  --red:#f64137;         /* the current phase and surface sites, nothing else */
+  --on-red:#17171b;
+  --blue:#5aa9ff;        /* data and links, 7:1 on carbon */
+  --blue-soft:rgba(90,169,255,.16);
+  --maxw:1180px;--measure:68ch;
+  --display:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  color-scheme:dark;
+}
+body.light{
+  --carbon:#f7f7f5;--panel:#ffffff;--graphite:#e3e3e0;--line:#d1d1d1;
+  --bone:#17171b;--gray:#58585b;--red:#c42f22;--on-red:#ffffff;
+  --blue:#1a4480;--blue-soft:rgba(26,68,128,.1);
+  color-scheme:light;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--space);color:var(--bone);
-  font-family:"Newsreader",Georgia,serif;font-size:19px;line-height:1.65;
-  overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-#stars{position:fixed;inset:0;z-index:0;display:block}
-.wrap{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:0 28px}
-.mono{font-family:"IBM Plex Mono",monospace;font-weight:500;letter-spacing:.02em}
-h1,h2,h3{font-family:"Fraunces",serif;font-weight:400;line-height:1.03;margin:0}
-.kicker{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.32em;
-  text-transform:uppercase;color:var(--gold);font-weight:500}
-.credit{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;
-  color:rgba(182,178,168,.6);text-transform:uppercase;margin-top:10px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--carbon);color:var(--bone);font-family:var(--body);font-size:18px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:var(--blue);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);margin:0;letter-spacing:-.025em;line-height:1.05}
+h1{font-weight:800}
+h2{font-weight:800;font-size:clamp(34px,5vw,56px)}
+h3{font-weight:700;font-size:21px;letter-spacing:-.01em;line-height:1.25}
+p{margin:0 0 1em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+.mono{font-family:var(--mono)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
-/* Top bars */
-.telemetry{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;
-  justify-content:space-between;align-items:center;padding:9px 22px;
-  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--bone-dim);
-  background:rgba(5,7,15,.86);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
-.telemetry .sig{color:var(--bone)}
-.telemetry .dot{color:var(--high);animation:blink 2.4s steps(1) infinite}
-.telemetry a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s}
-.telemetry a:hover{border-color:var(--gold)}
-@keyframes blink{50%{opacity:.25}}
-.nav{position:fixed;top:37px;left:0;right:0;z-index:29;display:flex;gap:4px;
-  align-items:center;padding:10px 22px;background:linear-gradient(180deg,rgba(5,7,15,.85),rgba(5,7,15,0));
-  backdrop-filter:blur(4px)}
-.nav .brand{font-family:"Fraunces",serif;font-size:18px;letter-spacing:.02em;margin-right:18px;text-decoration:none}
-.nav .brand b{color:var(--gold);font-weight:600}
-.nav a.link{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
-  text-transform:uppercase;text-decoration:none;color:var(--bone-dim);padding:7px 13px;border-radius:8px;transition:all .25s}
-.nav a.link:hover{color:var(--bone);background:rgba(242,236,224,.05)}
-.nav a.link.active{color:var(--gold)}
-.nav .spacer{flex:1}
-.progressbar{position:fixed;top:0;left:0;height:2px;width:0;z-index:31;
-  background:linear-gradient(90deg,var(--low),var(--gold),var(--high))}
+/* Skip link: first focusable element on every page. */
+.skip{position:absolute;left:16px;top:-60px;z-index:100;background:var(--bone);color:var(--carbon);padding:10px 16px;
+  border-radius:6px;font-weight:600;text-decoration:none}
+.skip:focus{top:12px}
 
-/* Layout primitives */
-section{position:relative;z-index:2;padding:96px 0}
-.reveal{opacity:0;transform:translateY(24px);
-  transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
-.reveal.in{opacity:1;transform:none}
-.head{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:14px}
-.head h2{font-size:clamp(32px,5.5vw,60px);font-weight:300;letter-spacing:-.01em}
-.head .idx{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--gold);letter-spacing:.2em}
-.sub{max-width:720px;color:var(--bone-dim);font-size:19px;margin-bottom:44px}
+/* Header */
+.site-header{position:sticky;top:0;z-index:50;background:var(--carbon);border-bottom:1px solid var(--graphite)}
+.nav{display:flex;align-items:center;gap:6px;max-width:var(--maxw);margin:0 auto;padding:10px 32px;min-height:60px}
+.nav .brand{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--bone);
+  text-decoration:none;margin-right:auto;white-space:nowrap}
+.nav a.link{font-size:15px;font-weight:600;color:var(--gray);text-decoration:none;padding:10px 12px;border-radius:6px;min-height:44px;
+  display:inline-flex;align-items:center}
+.nav a.link:hover{color:var(--bone)}
+.nav a.link[aria-current="page"]{color:var(--bone);box-shadow:inset 0 -2px 0 var(--red)}
+.themebtn{margin-left:8px;width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:transparent;
+  color:var(--gray);cursor:pointer;font-size:16px;flex:none}
+.themebtn:hover{color:var(--bone)}
 
-/* Buttons */
-.btn{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
-  padding:13px 20px;border-radius:10px;border:1px solid var(--gold);background:rgba(232,163,61,.12);
-  color:var(--gold);cursor:pointer;font-weight:600;transition:all .25s;text-decoration:none;display:inline-block}
-.btn:hover{background:var(--gold);color:#20160a}
-.btn.ghost{border-color:var(--line);background:transparent;color:var(--bone-dim)}
-.btn.ghost:hover{color:var(--bone);border-color:var(--bone-dim);background:rgba(242,236,224,.04)}
+/* Page scaffolding */
+main{display:block}
+section{padding:88px 0;border-top:1px solid var(--graphite);scroll-margin-top:130px}
+.section-head{max-width:var(--measure);margin-bottom:36px}
+.section-head h2{margin-bottom:16px}
+.section-head p{color:var(--gray);font-size:19px}
+.reveal{opacity:1;transform:none}   /* no per-section entrance motion */
 
 /* Footer */
-footer{padding:66px 0 90px;color:var(--bone-dim);font-size:14px;position:relative;z-index:2;border-top:1px solid var(--line);margin-top:40px}
-footer a.tlink{color:var(--low-2);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .3s}
-footer a.tlink:hover{border-color:var(--low-2)}
-.disclaimer{border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:26px;
-  font-size:14px;color:var(--bone-dim);background:var(--space-2)}
-.src{font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:2}
-.byline{margin-top:24px;font-family:"Fraunces",serif;font-style:italic;font-size:18px;color:var(--bone)}
+footer{border-top:1px solid var(--graphite);padding:56px 0 72px;color:var(--gray);font-size:15.5px}
+footer .disclaimer{max-width:var(--measure);margin-bottom:22px}
+footer .src{font-size:15px;line-height:1.9}
+footer .byline{margin-top:14px;color:var(--bone)}
 
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
-@media(max-width:640px){
-  .nav{overflow-x:auto}
-  body{font-size:18px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:700px){
+  body{font-size:17px}
+  .wrap{padding:0 16px}
+  .nav{padding:8px 16px;gap:0}
+  .nav a.link{padding:10px 8px;font-size:14px}
+  section{padding:60px 0;scroll-margin-top:120px}
 }
-
-/* Theme toggle */
-.themebtn{margin-left:auto;font-size:15px;line-height:1;background:transparent;border:1px solid var(--line);
-  color:var(--bone-dim);width:34px;height:34px;border-radius:9px;cursor:pointer;transition:all .25s;flex:none}
-.themebtn:hover{color:var(--bone);border-color:var(--bone-dim);background:rgba(128,128,128,.08)}
-
-/* Light mode */
-body.light{
-  --space:#f5f1e8;--space-2:#ece6d8;--panel:#fffdf8;
-  --bone:#191a1f;--bone-dim:#5c584e;--line:rgba(20,18,12,.15);--gold:#a86f10;
+@media(max-width:560px){
+  .nav{flex-wrap:wrap;padding:6px 12px 0}
+  .nav .brand{flex:1 1 auto;font-size:17px}
+  .themebtn{order:1}
+  .nav a.link{order:2;padding:8px 10px 10px;min-height:44px}
+  .nav a.link:first-of-type{padding-left:0}
 }
-body.light .telemetry{background:rgba(245,241,232,.9);border-bottom-color:var(--line)}
-body.light .nav{background:linear-gradient(180deg,rgba(245,241,232,.92),rgba(245,241,232,0))}
-body.light .credit{color:rgba(40,36,28,.5)}
-body.light footer a.tlink{color:#2f6fd0}
-body.light .readpanel .big{color:#2f6fd0}
-
-/* Sans preview (?font=sans): NASA-style Inter + Public Sans, mono kept */
-body.sans{font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
-body.sans h1,body.sans h2,body.sans h3,
-body.sans .nav .brand,body.sans .byline,body.sans .expand,body.sans .lede,
-body.sans .rd .rt,body.sans .tl-title,body.sans .close-band .big-quote,
-body.sans .mstrip h3,body.sans .bubble h3,body.sans .fcard h3{
-  font-family:"Inter","Public Sans",system-ui,sans-serif !important}

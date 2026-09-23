@@ -5,36 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>How it works · Wiring the Moon</title>
 <meta name="robots" content="noindex">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23c9c4b8%22/%3E%3Ccircle cx=%2216%22 cy=%2226%22 r=%223.5%22 fill=%22%23e8a33d%22/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23b9b9bb%22/%3E%3Ccircle cx=%2216%22 cy=%2226%22 r=%223.5%22 fill=%22%23f64137%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/site.css">
 <style>
 .doc{max-width:760px}
-.doc h1{font-size:clamp(38px,6vw,60px);font-weight:300;margin:8px 0 18px}
-.doc h2{font-size:28px;font-weight:400;margin:46px 0 10px}
-.doc p,.doc li{color:var(--bone-dim);font-size:18px}
+.doc h1{font-size:clamp(40px,5.6vw,64px);letter-spacing:-.04em;margin:8px 0 22px}
+.doc h2{font-size:28px;margin:48px 0 10px}
+.doc p,.doc li{color:var(--bone);font-size:18px;max-width:68ch}
 .doc strong{color:var(--bone);font-weight:500}
-.doc code{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--bone);background:rgba(242,236,224,.06);padding:1px 6px;border-radius:5px}
+.doc code{font-family:var(--mono);font-size:15px;color:var(--blue);background:var(--blue-soft);padding:1px 6px;border-radius:4px}
 .doc table{width:100%;border-collapse:collapse;font-size:15.5px;margin-top:8px}
-.doc th,.doc td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--bone-dim)}
-.doc th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:500}
-.doc a{color:#7fd3ff}
+.doc th,.doc td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--bone)}
+.doc th{font-weight:600;font-size:15px;color:var(--gray)}
+
 @media(max-width:560px){.wrap{padding:0 16px}.doc table{font-size:14px}}
 </style>
 </head>
 <body>
-<canvas id="stars"></canvas>
-<div class="telemetry"><div class="sig"><span class="dot">●</span> WIRING THE MOON · UNDER THE HOOD</div><div></div></div>
-<nav class="nav">
-  <a class="brand" href="../"><b>Wiring</b> the Moon</a>
-  <button class="themebtn" id="theme-toggle" aria-label="Toggle light or dark mode">☀</button>
-</nav>
-<section style="padding-top:130px">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <nav class="nav" aria-label="Site">
+    <a class="brand" href="../">Wiring the Moon</a>
+    <a class="link" href="../">Story</a>
+    <a class="link" href="../standards/">Standards</a>
+    <a class="link" href="../sources/">Sources</a>
+    <button class="themebtn" id="theme-toggle" aria-label="Switch to light theme">☀</button>
+  </nav>
+</header>
+<main id="main">
+<section style="padding-top:56px;border-top:0">
   <div class="wrap doc">
-    <div class="kicker">Colophon</div>
-    <h1>How this site is built</h1>
+    <h1 id="hero-title">How this site is built</h1>
 
     <h2>The rule</h2>
     <p>Every requirement on the page is copied from one of two public NASA documents, and each figure carries a tag saying which:</p>
@@ -44,7 +48,7 @@
       <tr><td><code>UG</code> + page</td><td><a href="https://www.nasa.gov/wp-content/uploads/2026/04/moon-base-architecture-users-guide.pdf" target="_blank" rel="noopener"><em>Moon Base User's Guide: Architecture Resources</em></a>, April 2026</td><td>Phase goals, Traffic, the Phase 1 comms targets, open problems, The base it serves, partnership areas</td></tr>
     </table>
     <p>Where the two documents give different kinds of numbers for the same thing, the page shows both side by side and does not reconcile them. The clearest case: the guide's Phase 1 target of more than 500 Mbps is a capability target, while the SCaN table's 50 Mbps in 2028 is a demand forecast.</p>
-    <p>Where a lay reader needs a yardstick, the page offers one, but those are mine and are tagged <strong>mine</strong> in a dashed gold box: gigabit home fiber, an Olympic pool, how far light travels in a microsecond, and the illustrative rocks in the pixel demo. Nothing else is interpreted, projected or filled in.</p>
+    <p>Where a lay reader needs a yardstick, the page offers one, but those are mine and are tagged <strong>mine</strong> in a dashed box: gigabit home fiber, an Olympic pool, how far light travels in a microsecond, and the illustrative rocks in the pixel demo. Nothing else is interpreted, projected or filled in.</p>
 
     <h2>One switch, every number</h2>
     <p>The paper is built around NASA's three Moon Base phases, and every table has the same three columns. The User's Guide uses the same three phases. So all of the data lives in a single file, <code>assets/data.js</code>: one object per phase from SCaN, and a second block for the guide. The phase switch at the bottom of the screen broadcasts the selected phase, and each section redraws itself from that object. If NASA revises the paper, one file changes.</p>
@@ -68,14 +72,20 @@
     <p><strong>Traffic.</strong> Payload bars share one scale, so Phase 1's ~4,000 kg is a sliver next to Phase 3's ~150,000 kg. The "times Phase 1" figure in the callout is plain division of the guide's rounded numbers.</p>
     <p><strong>Navigation circles.</strong> Drawn in metres on one SVG coordinate system, so the 50, 25 and 10 m rings and the pool share a true scale.</p>
 
+    <h2>Design</h2>
+    <p>The site borrows NASA's design practice, not NASA's brand. The typefaces are the three nasa.gov uses: Inter for headlines, Public Sans for reading and DM Mono for numbers, so every figure reads like an instrument readout. The palette follows nasa.gov's carbon grays, with one red used only for the phase you are in and the surface sites, and blue for data and links. No NASA insignia, logotype or wordmark appears anywhere.</p>
+    <p>One element is allowed to be bold: the phase rail under the header, a real timeline whose segments are as wide as the years they cover. Everything else is separated by rules and space instead of boxes.</p>
+    <p>Accessibility follows the standard federal sites are held to, WCAG 2.1 AA: a skip link, header, main and footer landmarks, a phase switch you can drive with the arrow keys or the 1, 2 and 3 keys, 44 pixel touch targets, visible focus, text contrast checked in both themes, and no motion when your system asks for less.</p>
+
     <h2>Stack</h2>
     <p>Plain HTML, CSS and JavaScript. No framework, no build step, no tracking beyond Vercel Web Analytics. three.js is vendored locally. Dark and light themes, <code>?phase=2</code> deep-links a phase, keys 1 to 3 switch phases, and motion stops when your system asks for reduced motion.</p>
 
     <h2>What this is not</h2>
     <p>An independent explainer, not affiliated with, produced by, or endorsed by NASA. It summarizes only these two public documents, and it is not advice for anyone bidding on the work it describes.</p>
-    <p style="margin-top:40px"><a href="../">← Back to the site</a></p>
+    <p style="margin-top:40px"><a href="../">Back to the site</a></p>
   </div>
 </section>
+</main>
 <script src="../assets/site.js"></script>
 </body>
 </html>

@@ -44,8 +44,8 @@ window.CONFLICTS = [
     b: "NASA's phases page (updated Aug 24, 2026) and the March fact sheet: Now to 2029, 2029 to 2032, 2032 and beyond.",
     site: "The home page follows SCaN, because its tables are built on those dates." },
   { k: "Phase names",
-    a: "SCaN: Build, Test, Learn · Establish Early Infrastructure · Sustained Human Presence.",
-    b: "Phases page: Gain Reliable Access, Experiment, and Learn · Build and Expand · Live and Work on the Moon. Fact sheet: Experiment, Learn · Early Habitation · Sustained Human Presence.",
+    a: "SCaN: Build, Test, Learn; Establish Early Infrastructure; Sustained Human Presence.",
+    b: "Phases page: Gain Reliable Access, Experiment, and Learn; Build and Expand; Live and Work on the Moon. Fact sheet: Experiment, Learn; Early Habitation; Sustained Human Presence.",
     site: "SCaN's names, for consistency with its tables." },
   { k: "Where the first service zone starts",
     a: "SCaN Table 1: latitude -84° to -90°.",
@@ -85,10 +85,10 @@ window.NOTES = [
     src: "SRD 27" },
   { t: "Authentication from day one",
     d: "The Moon's navigation signal copies GPS on purpose. Civil GPS was never authenticated, and Earth is still dealing with spoofing because of it. Here the navigation service must authenticate itself and resist jamming from the start. That is the right lesson to have learned.",
-    src: "SRD 45 · AFS 47" },
+    src: "SRD 45, AFS 47" },
   { t: "Custody is a promise",
     d: "Store-and-forward with custody transfer means each hop takes responsibility for a bundle before the previous one lets go. Financial messaging has worked this way for decades, because a lost payment instruction is not an option. A lost command near the Moon is not one either.",
-    src: "SRD 38 · LN 18" },
+    src: "SRD 38, LN 18" },
   { t: "Autonomy raises the stakes",
     d: "The network must also connect users near the Moon without routing through Earth. As more systems act without a human in the loop, the time and position they act on become the thing to protect. It is the same problem I see with AI agents: the risk is in the inputs they trust.",
     src: "SRD 27" }
@@ -99,12 +99,12 @@ window.STD = {
   lunanet: [
     { t: "A network of networks", d: "LunaNet is “a network of cooperating networks (network of networks, akin to the terrestrial Internet)”. No single operator runs it.", src: "LN 9" },
     { t: "Many providers, one experience", d: "Government and commercial providers each run a piece. A user should get the same service from any of them, so that it “appears as a single provider”.", src: "LN 15" },
-    { t: "International from the start", d: "The first version, LunaNet 1.0, includes providers from NASA, ESA and Japan. NASA is coordinating its relay purchase with a similar ESA activity called Moonlight.", src: "LN 9 · ADD 86" },
+    { t: "International from the start", d: "The first version, LunaNet 1.0, includes providers from NASA, ESA and Japan. NASA is coordinating its relay purchase with a similar ESA activity called Moonlight.", src: "LN 9, ADD 86" },
     { t: "Four kinds of service", d: "Communications, Position, Navigation and Timing, Messaging, and Detection and Information (such as alerts).", src: "LN §3" }
   ],
   send: [
     { t: "Real time", d: "Like a phone call: data flows while a link is up. Built on IP (IPv4 or IPv6) or the Bundle Protocol.", src: "LN 18, 21, 47" },
-    { t: "Store and forward", d: "Like a post office: relays hold data until the next hop is available, which “explicitly deals with long delays, disruption, and/or disconnection”. It uses Delay/Disruption Tolerant Networking (DTN), Bundle Protocol version 7, and relays must keep custody of each bundle.", src: "LN 18, 21 · SRD 38" },
+    { t: "Store and forward", d: "Like a post office: relays hold data until the next hop is available, which “explicitly deals with long delays, disruption, and/or disconnection”. It uses Delay/Disruption Tolerant Networking (DTN), Bundle Protocol version 7, and relays must keep custody of each bundle.", src: "LN 18, 21, SRD 38" },
     { t: "How long it takes", d: "The requirements estimate about 5 seconds end to end, from a user on Earth to a user on the lunar surface. Each relay node gets under 1 second (to be reviewed).", src: "SRD 27" },
     { t: "Staying on the Moon", d: "Relays must also connect users near the Moon to each other without routing through Earth, which would add delay and use Earth stations.", src: "SRD 27" }
   ],
@@ -122,7 +122,7 @@ window.STD = {
     /* [label, group, lowMHz, highMHz, source] */
     ["S-band, to users", "Near the Moon", 2025, 2110, "LN 45"],
     ["S-band, from users", "Near the Moon", 2200, 2290, "LN 41"],
-    ["Navigation signal", "Navigation", 2483.5, 2500, "LN 24 · AFS 14"],
+    ["Navigation signal", "Navigation", 2483.5, 2500, "LN 24, AFS 14"],
     ["X-band, Earth up", "To and from Earth", 7190, 7235, "LN 39"],
     ["X-band, Earth down", "To and from Earth", 8450, 8500, "LN 39, 44"],
     ["K-band, Earth up", "To and from Earth", 22550, 23150, "LN 45"],
@@ -137,8 +137,8 @@ window.STD = {
     { t: "On the ground", d: "Surface radios move from legacy UHF and Wi-Fi toward terrestrial 3GPP/5G standards.", src: "ADD 67" }
   ],
   relays: [
-    { when: "2025 to 2028", t: "Initial capability", d: "“A few relays in lunar orbit”, proven in three increments: Alpha, Bravo and Charlie. Service from 80° S to the pole, up to 125 km.", src: "SRD 10, 13 · ADD 66" },
-    { when: "Next", t: "Wider zone", d: "The service volume grows to 75° S and 200 km, with simultaneous S-band and Ka-band links.", src: "SRD 13 · ADD 66" },
+    { when: "2025 to 2028", t: "Initial capability", d: "“A few relays in lunar orbit”, proven in three increments: Alpha, Bravo and Charlie. Service from 80° S to the pole, up to 125 km.", src: "SRD 10, 13, ADD 66" },
+    { when: "Next", t: "Wider zone", d: "The service volume grows to 75° S and 200 km, with simultaneous S-band and Ka-band links.", src: "SRD 13, ADD 66" },
     { when: "2030 (to be reviewed)", t: "Enhanced capability", d: "A larger network with global coverage of the Moon.", src: "SRD 10, 14" },
     { when: "Phase 1, per NASA today", t: "Five satellites, then a second provider", d: "“An initial five-satellite orbital relay constellation”, followed by a second provider's constellation for coverage and resiliency. The first satellite is Altus-1, from Intuitive Machines.", src: "WEB" }
   ],

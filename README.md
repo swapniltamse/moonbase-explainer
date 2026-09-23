@@ -113,7 +113,7 @@ Full links are on the [Sources page](https://moonbase.swapniltamse.com/sources/)
 
 ## Credits and licenses
 
-Code is released under the [MIT License](LICENSE). Third-party assets keep their own terms:
+Code is released under the [MIT License](LICENSE). Third-party assets keep their own terms (see [NOTICE.md](NOTICE.md)):
 
 - Moon surface texture: [Solar System Scope](https://www.solarsystemscope.com/textures/), CC BY 4.0, based on NASA data.
 - South Pole mosaic: LROC Wide Angle Camera, NASA/GSFC/Arizona State University (Speyerer et al., 2020, Lunar Surface Science Workshop, abstract 5132).

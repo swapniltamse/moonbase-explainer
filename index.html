@@ -53,10 +53,15 @@
     </div>
     <div class="hero-globe">
       <div class="globe-holder">
-        <canvas id="globe" role="img" aria-label="The lunar South Pole, showing the service region, surface sites and relay satellites for the selected phase."></canvas>
+        <canvas id="globe" tabindex="0" role="img" aria-label="The lunar South Pole, showing the service region, surface sites and relay satellites for the selected phase."></canvas>
         <img class="fallimg" id="fallimg" src="assets/moon-surface.jpg" alt="">
         <div class="marklayer" id="marks"></div>
         <div class="loading" id="loading">Loading the Moon…</div>
+      </div>
+      <div class="globe-ctrls" role="group" aria-label="Globe view">
+        <button type="button" id="view-whole" aria-pressed="true">Whole Moon</button>
+        <button type="button" id="view-close" aria-pressed="false">Close-up on the base</button>
+        <button type="button" id="view-pause" class="pause" aria-pressed="false">Pause motion</button>
       </div>
       <div class="legend">
         <span class="lg-site"><i></i>Surface site</span>
@@ -64,7 +69,7 @@
         <span class="lg-link"><i></i>Link</span>
         <span class="lg-dome"><i></i>Service region</span>
       </div>
-      <p class="gcap">Service region and altitude are to scale. Site positions, relay orbits and relay counts are schematic, because the paper sets coverage targets, not a constellation design. Older relay requirements start the first zone at 80° S: <a href="standards/#relays">see how the relays arrive</a>.</p>
+      <p class="gcap">Drag to turn it. The service region and its height are to scale. Site positions, relay orbits and relay counts are schematic, because the paper sets coverage targets, not a constellation design. Older relay requirements start the first zone at 80° S: <a href="standards/#relays">see how the relays arrive</a>.</p>
     </div>
   </div>
 </section>
@@ -504,7 +509,11 @@ function drawPixels(cm) {
 /* ---------- Build ---------- */
 $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>${a.d}</p></div>`).join('');
 
-/* ---------- Globe: the lunar South Pole ---------- */
+/* ---------- Globe: the lunar South Pole ----------
+   Two views. "Whole Moon" shows where the pole is, the relays circling and the
+   direction of Earth. "Close-up" flies down over the pole so the service region,
+   its height and the sites fill the frame. Motion can be paused (WCAG 2.2.2)
+   and starts paused when the system asks for reduced motion. */
 (function () {
   const canvas = $('globe'), holder = canvas.parentElement, marks = $('marks'), loading = $('loading');
   function fallback() { loading.style.display = 'none'; canvas.style.display = 'none'; marks.style.display = 'none'; $('fallimg').style.display = 'block'; }
@@ -513,7 +522,7 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
 
   const R_MOON_KM = 1737.4;
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.005, 100);
   const moonMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
   scene.add(new THREE.Mesh(new THREE.SphereGeometry(1, 128, 96), moonMat));
 
@@ -525,71 +534,77 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
     const u = 0.5 + lon / 360, phi = u * 2 * Math.PI, th = (90 - lat) * Math.PI / 180;
     return new THREE.Vector3(-Math.cos(phi) * Math.sin(th), Math.cos(th), Math.sin(phi) * Math.sin(th));
   }
+  const POLE = new THREE.Vector3(0, -1, 0);
 
   /* Service region, Table 1: latitude -84 to -90, from the surface up to the
-     phase's altitude. The dome is a spherical cap at radius 1 + alt/R, to scale. */
+     phase's altitude. A translucent cap at radius 1 + alt/R, to scale, with its
+     surface edge, its top edge, and one line showing the height. */
+  const RED = 0xf64137, BLUE = 0x5aa9ff;
   const capAng = (90 + D.region.latFrom) * Math.PI / 180;
-  const domeMat = new THREE.MeshBasicMaterial({ color: 0xf64137, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false });
-  const dome = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 12, 0, Math.PI * 2, Math.PI - capAng, capAng), domeMat);
-  scene.add(dome);
-  const ringPts = []; for (let i = 0; i <= 128; i++) ringPts.push(dir(D.region.latFrom, i / 128 * 360 - 180).multiplyScalar(1.001));
-  const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), new THREE.LineBasicMaterial({ color: 0xf64137, transparent: true, opacity: 0.9 }));
-  scene.add(ring);
-  /* The dome's rim, lifted to altitude, so the wall of the volume reads. */
-  const rimGeo = new THREE.BufferGeometry().setFromPoints(ringPts);
-  const rim = new THREE.Line(rimGeo, new THREE.LineBasicMaterial({ color: 0xf64137, transparent: true, opacity: 0.45 }));
-  scene.add(rim);
-  /* Vertical struts from the surface ring up to the rim, so the region reads
-     as a volume with a height rather than a disc floating over the pole. */
-  const wallBase = ringPts.filter((_, i) => i % 8 === 0);
-  const wall = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xf64137, transparent: true, opacity: 0.4 }));
-  scene.add(wall);
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 16, 0, Math.PI * 2, Math.PI - capAng, capAng),
+    new THREE.MeshBasicMaterial({ color: RED, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false }));
+  const ringPts = []; for (let i = 0; i <= 160; i++) ringPts.push(dir(D.region.latFrom, i / 160 * 360 - 180));
+  const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts.map(p => p.clone().multiplyScalar(1.001))),
+    new THREE.LineBasicMaterial({ color: RED, transparent: true, opacity: 0.95 }));
+  const rim = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), new THREE.LineBasicMaterial({ color: RED, transparent: true, opacity: 0.6 }));
+  const mast = new THREE.Line(new THREE.BufferGeometry().setFromPoints([POLE, POLE]), new THREE.LineBasicMaterial({ color: 0xf4f4f1, transparent: true, opacity: 0.9 }));
+  const wallGeo = new THREE.BufferGeometry();
+  const wallIdx = []; for (let i = 0; i < 160; i++) { const a = 2 * i, b = a + 1, c = a + 2, d = a + 3; wallIdx.push(a, c, b, b, c, d); }
+  wallGeo.setIndex(wallIdx);
+  const wall = new THREE.Mesh(wallGeo, new THREE.MeshBasicMaterial({ color: RED, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false }));
   let wallR = 0;
-  function setWall(rr) { if (Math.abs(rr - wallR) < 1e-5) return; wallR = rr;
-    const pts = []; wallBase.forEach(q => { pts.push(q, q.clone().multiplyScalar(rr)); }); wall.geometry.setFromPoints(pts); }
+  function setWall(rr) {
+    if (Math.abs(rr - wallR) < 1e-5) return; wallR = rr;
+    const v = []; ringPts.forEach(q => { v.push(q.x, q.y, q.z, q.x * rr, q.y * rr, q.z * rr); });
+    wallGeo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); wallGeo.computeBoundingSphere();
+  }
+  dome.material.opacity = 0.08;
+  scene.add(dome, wall, ring, rim, mast);
 
   /* Surface sites: schematic positions inside the region (the paper gives no coordinates). */
-  const SITES = [[-89.4, 20], [-88.3, 140], [-88.5, -100], [-86.6, 60], [-86.9, -160]];
-  const sites = SITES.map((ll, i) => {
-    const el = document.createElement('div'); el.className = 'mk site';
-    el.innerHTML = '<span class="d"></span>';
-    el.title = 'Surface site ' + (i + 1) + ' (schematic position)';
-    marks.appendChild(el);
-    return { p: dir(ll[0], ll[1]), el, a: 0 };
-  });
-  const regionEl = document.createElement('div'); regionEl.className = 'mk'; marks.appendChild(regionEl);
-  const earthEl = document.createElement('div'); earthEl.className = 'mk earth'; earthEl.innerHTML = '<span class="t">↗ To Earth</span>';
-  marks.appendChild(earthEl);
-  const EARTH = new THREE.Vector3(1, 0.02, 0).normalize();
+  const SITES = [[-89.2, 20], [-87.9, 140], [-88.1, -100], [-86.4, 60], [-86.7, -160]];
+  const mk = (cls, html) => { const el = document.createElement('div'); el.className = 'mk ' + cls; el.innerHTML = html; marks.appendChild(el); return el; };
+  const sites = SITES.map((ll, i) => ({ p: dir(ll[0], ll[1]), el: mk('site', '<span class="d"></span>'), a: 0 }));
+  sites.forEach((s, i) => { s.el.title = 'Surface site ' + (i + 1) + ' (schematic position)'; });
+  const L = {
+    pole: mk('tag', '<span class="t">South Pole</span>'),
+    region: mk('tag above', '<span class="t"></span>'),
+    height: mk('tag', '<span class="t"></span>'),
+    relay: mk('tag relay', '<span class="t">Relay (schematic)</span>'),
+    earth: mk('tag earth', '<span class="t">Toward Earth →</span>')
+  };
+  const scaleEl = document.createElement('div'); scaleEl.className = 'scalebar'; scaleEl.innerHTML = '<i></i><span>100 km</span>'; holder.appendChild(scaleEl);
+  const EARTH = new THREE.Vector3(1, 0, 0);
 
-  /* Relays: schematic elliptical orbits with the slow, high end over the south,
-     the shape lunar relays use to linger over the pole. Counts per phase are
-     illustrative; the paper only says early Phase 1 has fewer than the 4 needed
-     for navigation. */
+  /* Relays: schematic ellipses with the slow, high end over the south, the
+     shape lunar relays use to linger over the pole. Counts per phase are
+     illustrative; the paper only says early Phase 1 has fewer than the 4
+     needed for navigation. Kepler's equation sets the speed along each orbit. */
   const RELAYS_PER_PHASE = [2, 4, 6];
   const relays = [];
   for (let i = 0; i < 6; i++) {
-    const lon = i * 60 + 15, la = -45 * Math.PI / 180, lr = lon * Math.PI / 180;
+    const lr = (i * 60 + 25) * Math.PI / 180, la = -62 * Math.PI / 180;
     const apo = new THREE.Vector3(Math.cos(la) * Math.cos(lr), Math.sin(la), Math.cos(la) * Math.sin(lr)).normalize();
     const n = new THREE.Vector3(-Math.sin(lr), 0, Math.cos(lr));
     const b = new THREE.Vector3().crossVectors(n, apo).normalize();
-    const a = 1.34, e = 0.2, p = a * (1 - e * e);
+    const a = 1.5, e = 0.28, p = a * (1 - e * e);
     const pos = th => { const r = p / (1 - e * Math.cos(th)); return apo.clone().multiplyScalar(r * Math.cos(th)).add(b.clone().multiplyScalar(r * Math.sin(th))); };
-    const pts = []; for (let k = 0; k <= 160; k++) pts.push(pos(k / 160 * Math.PI * 2));
-    const orbit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x5aa9ff, transparent: true, opacity: 0 }));
-    const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.022), new THREE.MeshBasicMaterial({ color: 0x5aa9ff, transparent: true, opacity: 0 }));
-    const link = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: 0x5aa9ff, transparent: true, opacity: 0 }));
+    const pts = []; for (let k = 0; k <= 200; k++) pts.push(pos(k / 200 * Math.PI * 2));
+    const orbit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: BLUE, transparent: true, opacity: 0 }));
+    const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.035), new THREE.MeshBasicMaterial({ color: BLUE, transparent: true, opacity: 0 }));
+    const link = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]),
+      new THREE.LineBasicMaterial({ color: BLUE, transparent: true, opacity: 0 }));
     scene.add(orbit, sat, link);
-    relays.push({ pos, orbit, sat, link, M: i * 2.3, e, a: 0 });
+    relays.push({ pos, orbit, sat, link, M: i * 1.9, e, a: 0 });
   }
-  /* Kepler's equation, so relays really do dawdle at the high end of the orbit. */
   function trueAnomaly(M, e) { let E = M; for (let k = 0; k < 6; k++) E = E - (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); return 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2)); }
-  const dwe = new THREE.Line(new THREE.BufferGeometry().setFromPoints([sites[0].p.clone().multiplyScalar(1.002), sites[0].p.clone().add(EARTH.clone().multiplyScalar(3))]),
-    new THREE.LineDashedMaterial({ color: 0x5aa9ff, dashSize: 0.04, gapSize: 0.03, transparent: true, opacity: 0.8 }));
+  /* Direct-with-Earth: a dashed line from the base toward Earth, strongest in Phase 1. */
+  const dwe = new THREE.Line(new THREE.BufferGeometry().setFromPoints([sites[0].p.clone().multiplyScalar(1.002), sites[0].p.clone().add(EARTH.clone().multiplyScalar(4))]),
+    new THREE.LineDashedMaterial({ color: BLUE, dashSize: 0.05, gapSize: 0.04, transparent: true, opacity: 0.8 }));
   dwe.computeLineDistances(); scene.add(dwe);
 
-  let target = { alt: 125, sites: 1, sitesLabel: '1', relays: 2, dweOp: 0.9 }, cur = { alt: 125 };
-  onPhase(p => { target = { alt: p.region.alt, sites: p.region.sites, sitesLabel: p.region.sitesLabel, relays: RELAYS_PER_PHASE[p.n - 1], dweOp: p.n === 1 ? 0.9 : 0.4 }; });
+  let target = { alt: 125, sites: 1, relays: 2, dweOp: 0.9 }, cur = { alt: 125 };
+  onPhase(p => { target = { alt: p.region.alt, sites: p.region.sites, relays: RELAYS_PER_PHASE[p.n - 1], dweOp: p.n === 1 ? 0.9 : 0.35 }; });
 
   new THREE.TextureLoader().load('assets/moon-surface.jpg', t => {
     if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace;
@@ -597,59 +612,111 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
     moonMat.map = t; moonMat.color.set(0xffffff); moonMat.needsUpdate = true; loading.style.display = 'none';
   }, undefined, () => { loading.textContent = 'Texture unavailable'; });
 
-  /* Camera circles the pole: azimuth drifts, elevation is fixed low enough to see
-     the dome in profile and high enough to see the sites. Drag to turn. */
-  let az = 0.6, dragging = false, px = 0, hold = 0;
-  const reduced = window.__reducedMotion;
-  canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; hold = Date.now() + 8000; canvas.setPointerCapture(e.pointerId); });
-  canvas.addEventListener('pointermove', e => { if (!dragging) return; az -= (e.clientX - px) * 0.008; px = e.clientX; });
-  addEventListener('pointerup', () => { dragging = false; });
+  /* ---- Camera: orbit around a target, eased between two presets ---- */
+  const VIEWS = {
+    whole: { tx: 0, ty: -0.25, tz: 0, dist: 6.3, el: -0.88, fov: 38 },
+    close: { tx: 0, ty: -1.02, tz: 0, dist: 0.9, el: -0.92, fov: 40 }
+  };
+  let view = 'whole', az = 0.9, el = VIEWS.whole.el, cam = Object.assign({}, VIEWS.whole);
+  let paused = !!window.__reducedMotion, dragging = false, px = 0, py = 0;
 
-  const tmp = new THREE.Vector3();
+  const btnWhole = $('view-whole'), btnClose = $('view-close'), btnPause = $('view-pause');
+  function setView(v) {
+    view = v; el = VIEWS[v].el;
+    [[btnWhole, 'whole'], [btnClose, 'close']].forEach(([b, k]) => b && b.setAttribute('aria-pressed', String(k === v)));
+    canvas.setAttribute('aria-label', v === 'whole'
+      ? 'The whole Moon, tilted to show the South Pole, with relay satellites circling and linking to the base.'
+      : 'Close-up of the lunar South Pole service region, showing its height and the surface sites.');
+  }
+  function setPaused(pz) {
+    paused = pz;
+    if (btnPause) { btnPause.setAttribute('aria-pressed', String(pz)); btnPause.textContent = pz ? 'Play motion' : 'Pause motion'; }
+  }
+  btnWhole && btnWhole.addEventListener('click', () => setView('whole'));
+  btnClose && btnClose.addEventListener('click', () => setView('close'));
+  btnPause && btnPause.addEventListener('click', () => setPaused(!paused));
+  setView('whole'); setPaused(paused);
+
+  canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; py = e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    az -= (e.clientX - px) * 0.008; el = Math.max(-1.45, Math.min(0.35, el - (e.clientY - py) * 0.006));
+    px = e.clientX; py = e.clientY;
+  });
+  addEventListener('pointerup', () => { dragging = false; });
+  canvas.addEventListener('keydown', e => {
+    const k = e.key; let used = true;
+    if (k === 'ArrowLeft') az += 0.15; else if (k === 'ArrowRight') az -= 0.15;
+    else if (k === 'ArrowUp') el = Math.max(-1.45, el - 0.1); else if (k === 'ArrowDown') el = Math.min(0.35, el + 0.1);
+    else if (k === 'Enter' || k === ' ') setView(view === 'whole' ? 'close' : 'whole');
+    else used = false;
+    if (used) e.preventDefault();
+  });
+
+  const tmp = new THREE.Vector3(), tgt = new THREE.Vector3();
+  const toPx = (v, w, h) => { const q = v.clone().project(camera); return { x: (q.x * .5 + .5) * w, y: (-q.y * .5 + .5) * h, z: q.z }; };
+  const place = (el, p, op) => { el.style.left = p.x + 'px'; el.style.top = p.y + 'px'; el.style.opacity = op; };
+  const visible = (pt, camPos) => pt.clone().normalize().dot(tmp.copy(camPos).sub(pt).normalize()) > 0.02;
   let lastT = performance.now();
+
   function loop(now) {
     const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
-    if (!dragging && !reduced && Date.now() > hold) az += dt * 0.05;
-    const dist = 2.9, el = -1.0;  /* elevation (radians) below the equator: about 60° */
-    camera.position.set(Math.cos(az) * Math.cos(el) * dist, Math.sin(el) * dist, Math.sin(az) * Math.cos(el) * dist);
-    camera.lookAt(0, -0.82, 0);
+    const k = 1 - Math.pow(0.02, dt), kc = 1 - Math.pow(0.08, dt);
+    if (!paused && !dragging) az += dt * (view === 'whole' ? 0.07 : 0.035);
 
-    const k = 1 - Math.pow(0.02, dt);
+    const V = VIEWS[view];
+    ['tx', 'ty', 'tz', 'dist', 'fov'].forEach(key => { cam[key] += (V[key] - cam[key]) * kc; });
+    cam.el += (el - cam.el) * kc;
+    tgt.set(cam.tx, cam.ty, cam.tz);
+    camera.position.set(tgt.x + Math.cos(az) * Math.cos(cam.el) * cam.dist, tgt.y + Math.sin(cam.el) * cam.dist, tgt.z + Math.sin(az) * Math.cos(cam.el) * cam.dist);
+    camera.fov = cam.fov; camera.updateProjectionMatrix(); camera.lookAt(tgt);
+
     cur.alt += (target.alt - cur.alt) * k;
     const rr = 1 + cur.alt / R_MOON_KM;
     dome.scale.setScalar(rr); rim.scale.setScalar(rr); setWall(rr);
+    mast.geometry.setFromPoints([POLE, POLE.clone().multiplyScalar(rr)]);
     dwe.material.opacity += (target.dweOp - dwe.material.opacity) * k;
 
+    const closeness = Math.max(0, Math.min(1, (VIEWS.whole.dist - cam.dist) / (VIEWS.whole.dist - VIEWS.close.dist)));   /* 0 whole .. 1 close */
+    const poleAt = toPx(POLE, holder.clientWidth, holder.clientHeight);
+    const w = holder.clientWidth, h = holder.clientHeight;
+    let relayLabelAt = null;
     relays.forEach((r, i) => {
       const want = i < target.relays ? 1 : 0; r.a += (want - r.a) * k;
-      if (!reduced) r.M += dt * 0.16;
+      if (!paused) r.M += dt * 0.22;
       /* pos() measures from apoapsis; Kepler's angle is from periapsis, hence + π. */
       const p = r.pos(trueAnomaly(r.M % (Math.PI * 2), r.e) + Math.PI);
-      r.sat.position.copy(p); r.sat.material.opacity = r.a; r.orbit.material.opacity = 0.22 * r.a;
-      /* A link is drawn only when the relay is above the site's horizon. */
+      r.sat.position.copy(p); r.sat.material.opacity = r.a;
+      r.orbit.material.opacity = 0.3 * r.a * (1 - 0.9 * closeness);
       let best = null, bestDot = 0.05;
       sites.forEach((s, j) => { if (j >= target.sites) return; const d = tmp.copy(p).sub(s.p).normalize().dot(s.p); if (d > bestDot) { bestDot = d; best = s; } });
-      if (best) { r.link.geometry.setFromPoints([best.p.clone().multiplyScalar(1.002), p]); r.link.material.opacity = 0.55 * r.a; }
+      if (best) { r.link.geometry.setFromPoints([best.p.clone().multiplyScalar(1.002), p]); r.link.material.opacity = 0.7 * r.a; }
       else r.link.material.opacity = 0;
+      if (r.a > 0.9 && !relayLabelAt && visible(p, camera.position)) { const q = toPx(p, w, h); if (q.x > 40 && q.x < w - 150 && q.y > 20 && q.y < h - 20 && Math.hypot(q.x - poleAt.x, q.y - poleAt.y) > 110) relayLabelAt = q; }
     });
 
-    const w = holder.clientWidth, h = holder.clientHeight;
-    const camDir = camera.position.clone().normalize();
     sites.forEach((s, i) => {
       const want = i < target.sites ? 1 : 0; s.a += (want - s.a) * k;
-      const q = s.p.clone().multiplyScalar(1.004).project(camera);
-      const facing = s.p.dot(tmp.copy(camera.position).sub(s.p).normalize());
-      s.el.style.left = (q.x * .5 + .5) * w + 'px'; s.el.style.top = (-q.y * .5 + .5) * h + 'px';
-      s.el.style.opacity = facing > 0 ? s.a : 0;
+      place(s.el, toPx(s.p.clone().multiplyScalar(1.003), w, h), visible(s.p, camera.position) ? s.a : 0);
+      s.el.style.setProperty('--sz', (7 + 5 * closeness) + 'px');
     });
-    /* Label sits just under the lowest on-screen point of the surface ring. */
-    let best = null; for (let i = 0; i < 360; i += 15) { const c = dir(D.region.latFrom, i - 180).project(camera); if (!best || c.y < best.y) best = c; }
-    regionEl.innerHTML = `<span class="t">Service region, ${target.alt} km up</span>`;
-    regionEl.style.transform = 'translate(-50%,10px)';
-    regionEl.style.left = (best.x * .5 + .5) * w + 'px'; regionEl.style.top = (-best.y * .5 + .5) * h + 'px';
-    const eq = sites[0].p.clone().add(EARTH.clone().multiplyScalar(0.55)).project(camera);
-    earthEl.style.left = (eq.x * .5 + .5) * w + 'px'; earthEl.style.top = (-eq.y * .5 + .5) * h + 'px';
-    earthEl.style.opacity = (eq.z < 1 && Math.abs(eq.x) < 0.92 && Math.abs(eq.y) < 0.92) ? dwe.material.opacity : 0;
+
+    /* Labels: the pole in the whole view; the region, its height and a scale bar up close. */
+    const poleQ = toPx(POLE.clone().multiplyScalar(rr), w, h);
+    place(L.pole, poleQ, 1 - closeness);
+    L.region.querySelector('.t').textContent = 'Service region, 84° S to the pole';
+    let top = null; for (let i = 0; i < 360; i += 10) { const q = toPx(dir(D.region.latFrom, i - 180).multiplyScalar(rr), w, h); if (!top || q.y < top.y) top = q; }
+    place(L.region, top, closeness);
+    L.height.querySelector('.t').textContent = `${target.alt} km up`;
+    place(L.height, toPx(POLE.clone().multiplyScalar(1 + (rr - 1) / 2), w, h), closeness);
+    if (relayLabelAt) place(L.relay, relayLabelAt, 1 - closeness); else L.relay.style.opacity = 0;
+    const eq = toPx(EARTH.clone().multiplyScalar(1.12).add(new THREE.Vector3(0, -0.45, 0)), w, h);
+    const earthFacing = EARTH.dot(tmp.copy(camera.position).normalize()) > -0.15;
+    place(L.earth, eq, earthFacing ? (1 - closeness) * Math.min(1, dwe.material.opacity + 0.3) : 0);
+    /* 100 km bar, measured on the surface at the pole. */
+    const a1 = toPx(dir(-89.9, 0), w, h), a2 = toPx(dir(-89.9 + 100 / R_MOON_KM * 180 / Math.PI, 0), w, h);
+    scaleEl.querySelector('i').style.width = Math.max(10, Math.hypot(a2.x - a1.x, a2.y - a1.y)) + 'px';
+    scaleEl.style.opacity = closeness > 0.8 ? 1 : 0;
 
     renderer.render(scene, camera);
     requestAnimationFrame(loop);

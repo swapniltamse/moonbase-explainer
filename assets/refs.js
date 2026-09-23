@@ -78,7 +78,7 @@ window.CONFLICTS = [
 ];
 
 /* Opinion, not NASA's: Swapnil's notes as a security engineer. Each links to
-   the requirement it reacts to. DRAFT until he approves the wording. */
+   the requirement it reacts to. Approved for publication 2026-09-22. */
 window.NOTES = [
   { t: "The relay is not trusted with your data",
     d: "The requirements say relays pass user data along without ever decrypting it. That is the same bargain payment networks make: the pipes in the middle route what they cannot read. Treat the transport as untrusted and you stop worrying about who owns each hop.",

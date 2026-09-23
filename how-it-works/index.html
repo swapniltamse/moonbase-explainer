@@ -37,11 +37,17 @@
     <h1>How this site is built</h1>
 
     <h2>The rule</h2>
-    <p>Every requirement on the page is copied from one document: NASA SCaN's <em>Lunar Communications, PNT and Observability Industry Demand Signal</em>, dated August 28, 2026. Each figure carries a small tag, <code>T1</code> to <code>T4</code> or <code>§III</code>, naming the table or section it came from, so anyone can check it against the PDF.</p>
+    <p>Every requirement on the page is copied from one of two public NASA documents, and each figure carries a tag saying which:</p>
+    <table>
+      <tr><th>Tag</th><th>Source</th><th>Used for</th></tr>
+      <tr><td><code>T1</code> to <code>T4</code>, <code>§III</code></td><td>SCaN, <a href="https://www.nasa.gov/wp-content/uploads/2026/08/scan-cislunar-industry-demand-signal.pdf" target="_blank" rel="noopener"><em>Lunar Communications, PNT and Observability Industry Demand Signal</em></a>, August 28, 2026</td><td>Talk, Navigate, See, Build, the globe</td></tr>
+      <tr><td><code>UG</code> + page</td><td><a href="https://www.nasa.gov/wp-content/uploads/2026/04/moon-base-architecture-users-guide.pdf" target="_blank" rel="noopener"><em>Moon Base User's Guide: Architecture Resources</em></a>, April 2026</td><td>Phase goals, Traffic, the Phase 1 comms targets, open problems, The base it serves, partnership areas</td></tr>
+    </table>
+    <p>Where the two documents give different kinds of numbers for the same thing, the page shows both side by side and does not reconcile them. The clearest case: the guide's Phase 1 target of more than 500 Mbps is a capability target, while the SCaN table's 50 Mbps in 2028 is a demand forecast.</p>
     <p>Where a lay reader needs a yardstick, the page offers one, but those are mine and are tagged <strong>mine</strong> in a dashed gold box: gigabit home fiber, an Olympic pool, how far light travels in a microsecond, and the illustrative rocks in the pixel demo. Nothing else is interpreted, projected or filled in.</p>
 
     <h2>One switch, every number</h2>
-    <p>The paper is built around NASA's three Moon Base phases, and every table has the same three columns. So all of the data lives in a single file, <code>assets/data.js</code>, one object per phase. The phase switch at the bottom of the screen broadcasts the selected phase, and each section redraws itself from that object. If NASA revises the paper, one file changes.</p>
+    <p>The paper is built around NASA's three Moon Base phases, and every table has the same three columns. The User's Guide uses the same three phases. So all of the data lives in a single file, <code>assets/data.js</code>: one object per phase from SCaN, and a second block for the guide. The phase switch at the bottom of the screen broadcasts the selected phase, and each section redraws itself from that object. If NASA revises the paper, one file changes.</p>
     <p>Phase 2 is the one wrinkle. Table 2 splits it into 2030 and 2032 for throughput and user counts, so those values are stored as lists of milestones, and the page shows both.</p>
 
     <h2>The globe</h2>
@@ -59,13 +65,14 @@
     <h2>Smaller pieces</h2>
     <p><strong>Pixel demo.</strong> A 2 m patch of ground with two rocks is rendered at 1 cm, then each output pixel takes the average of its block, the way a real sensor sees. At 50 cm the whole 2 m patch is only sixteen pixels and even the 1 m boulder is a dark blur. At 25 cm it is sixty-four pixels and the boulder starts to hold its outline.</p>
     <p><strong>Revisit strips.</strong> One week, 168 hours, with a tick per pass. At a 3 hour revisit that is 56 ticks, at 1.5 hours 112, at 48 hours four, one pass every two days.</p>
+    <p><strong>Traffic.</strong> Payload bars share one scale, so Phase 1's ~4,000 kg is a sliver next to Phase 3's ~150,000 kg. The "times Phase 1" figure in the callout is plain division of the guide's rounded numbers.</p>
     <p><strong>Navigation circles.</strong> Drawn in metres on one SVG coordinate system, so the 50, 25 and 10 m rings and the pool share a true scale.</p>
 
     <h2>Stack</h2>
     <p>Plain HTML, CSS and JavaScript. No framework, no build step, no tracking beyond Vercel Web Analytics. three.js is vendored locally. Dark and light themes, <code>?phase=2</code> deep-links a phase, keys 1 to 3 switch phases, and motion stops when your system asks for reduced motion.</p>
 
     <h2>What this is not</h2>
-    <p>An independent explainer, not affiliated with, produced by, or endorsed by NASA. It is not a summary of anything beyond this one public paper, and it is not advice for anyone bidding on the work it describes.</p>
+    <p>An independent explainer, not affiliated with, produced by, or endorsed by NASA. It summarizes only these two public documents, and it is not advice for anyone bidding on the work it describes.</p>
     <p style="margin-top:40px"><a href="../">← Back to the site</a></p>
   </div>
 </section>

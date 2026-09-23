@@ -1,6 +1,6 @@
-/* Every number on this site lives here, and every one of them is copied from
-   NASA SCaN's "Lunar Communications, PNT and Observability Industry Demand
-   Signal" (August 28, 2026). Each group names the table it came from so a
+/* Every number on this site lives here. The main source is NASA SCaN's
+   "Lunar Communications, PNT and Observability Industry Demand Signal"
+   (August 28, 2026); the Moon Base User's Guide is the second, in GUIDE below. Each group names the table it came from so a
    reviewer can check it against the PDF line by line. Nothing below is
    extrapolated. The only values that are not NASA's are the "for scale"
    comparisons in SCALE, and the page labels those as mine wherever they appear. */
@@ -124,6 +124,55 @@ window.DEMAND = {
     { k: "Surface nodes", d: "Durable Wi-Fi, 3GPP and navigation transceivers, data aggregation, links home, and atomic clocks to help establish Coordinated Lunar Time." },
     { k: "Eyes in orbit", d: "Lunar surface observation instruments and the spacecraft buses to fly them." }
   ]
+};
+
+/* Second source: NASA's "Moon Base User's Guide: Architecture Resources"
+   (April 2026, NP-2026-04-6806-HQ). Tags on the page read "UG <page>".
+   The guide notes that current phasing details live at nasa.gov/ignition. */
+window.GUIDE = {
+  source: {
+    title: "Moon Base User's Guide: Architecture Resources",
+    date: "April 2026",
+    url: "https://www.nasa.gov/wp-content/uploads/2026/04/moon-base-architecture-users-guide.pdf"
+  },
+  /* Page 4, "Moon Base Phased Implementation" */
+  traffic: [
+    { launches: 25, landings: 21, kg: 4000,
+      goals: ["Achieve high-rate, reliable surface access", "Establish ground truth for Moon Base landing sites", "Experiment and test capabilities", "First crewed Moon Base mission"] },
+    { launches: 27, landings: 24, kg: 60000,
+      goals: ["Establish initial lunar surface infrastructure", "Increase CLPS payload mass capability to 5 t", "Technology demonstrations", "Semi-annual crewed missions"] },
+    { launches: 29, landings: 28, kg: 150000,
+      goals: ["Regolith manipulation and site preparation", "Increase CLPS payload mass capability to 8 t", "Uncrewed cargo return capabilities", "Continuous crew presence"] }
+  ],
+  /* Page 8, Communications & PNT, Phase 1 capability targets */
+  commsTargets: [
+    "A second orbital relay constellation with surface imaging capabilities, plus lunar surface ground stations, to enable more than 500 Mbps",
+    "Orbital navigation and timing assets"
+  ],
+  /* Pages 12 and 13, technology challenges that touch the network */
+  netChallenges: [
+    { k: "Surface-to-surface comms", d: "Communications systems that work in the Moon's geological, electromagnetic and radio frequency environment.", p: 12 },
+    { k: "Navigation in a noisy place", d: "Navigation and timing systems that account for the surface's electromagnetic radiation environment, which can affect accuracy.", p: 12 },
+    { k: "Timing systems", d: "Precise real-time synchronization between surface assets, with low latency and low drift.", p: 13 }
+  ],
+  /* Pages 8 to 10, Phase 1 capability targets by sub-architecture */
+  serves: [
+    { k: "Robotics", d: "Demonstrate unloading and manipulating 10 kg of cargo, preparing sites, and remotely mating and demating cables.", p: 8 },
+    { k: "Habitation", d: "Demonstrate extended crew stays (hygiene, exercise, nutrition, medical care), Earth-independent operations and waste management.", p: 9 },
+    { k: "Logistics", d: "Demonstrate transferring pressurized goods, water and gases on the surface.", p: 9 },
+    { k: "Mobility", d: "Small utility rovers and hoppers for science, reconnaissance and resource discovery, and large crewed and uncrewed rovers at 10 km/h.", p: 9 },
+    { k: "Power", d: "Demonstrate 5 kW of generation and storage that survives 120+ hours of darkness, and radioisotope generators to survive the night.", p: 10 },
+    { k: "Cargo", d: "Landers that deliver two metric tons to the South Pole region.", p: 10 }
+  ],
+  /* Page 7 */
+  environment: [
+    { k: "Lighting", d: "The Sun stays low on the horizon. Long shadows hinder solar power and bring prolonged extreme cold and dark.", p: 7 },
+    { k: "Terrain", d: "High mountains and deep craters. Rovers must descend steep slopes into permanently shadowed craters to reach frozen volatiles.", p: 7 },
+    { k: "Interoperability", d: "Systems from many providers must plug together, so NASA wants shared standards for power, docking and communications.", p: 7 }
+  ],
+  /* Page 15 */
+  partnerships: ["Surface habitation", "Logistics services", "Small mobility and robotics", "High capacity mobility systems",
+    "Large cargo delivery and return", "Resource mapping and reconnaissance", "Sample storage and conditioning", "Advanced navigation capabilities"]
 };
 
 /* Comparisons for a lay reader. NOT from the paper; labeled as mine on the page. */

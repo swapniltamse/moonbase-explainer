@@ -174,11 +174,34 @@ body.light .week{background:rgba(20,18,12,.05)}
 .ask h3{font-size:21px;font-weight:400;margin:8px 0 6px}
 .ask p{font-size:15.5px;color:var(--bone-dim);margin:0;line-height:1.5}
 
+.ref.ug{border-style:solid;border-color:rgba(127,211,255,.35);color:var(--link)}
+.goals{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:6px}
+.goals li{font-size:15.5px;color:var(--bone);padding-left:18px;position:relative;line-height:1.45}
+.goals li::before{content:"";position:absolute;left:2px;top:.55em;width:7px;height:7px;border-radius:2px;background:var(--gold)}
+.traffic{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:12px}
+.traffic div{background:var(--panel);padding:12px 14px}
+.traffic .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim)}
+.traffic .v{font-family:"Fraunces",serif;font-size:24px;font-weight:300;margin-top:2px;white-space:nowrap}
+.traffic .v small{font-size:.6em;color:var(--bone-dim);margin-left:3px}
+.kgrow{display:grid;grid-template-columns:90px 1fr 110px;gap:12px;align-items:center;margin-bottom:12px;font-size:15px;transition:opacity .4s}
+.kgrow .kl{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;color:var(--bone-dim)}
+.kgrow .kv{font-family:"IBM Plex Mono",monospace;font-size:13px;text-align:right}
+.kgrow.off{opacity:.38}
+.kgrow .track .fill{background:linear-gradient(90deg,#a86f10,var(--gold))}
+.tl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+.tl div{border-top:3px solid var(--line);padding-top:10px;font-size:14.5px;color:var(--bone-dim);line-height:1.45;transition:border-color .4s,color .4s}
+.tl div.on{border-color:var(--gold);color:var(--bone)}
+.tl b{display:block;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:4px}
+.tlist{display:grid;gap:14px}
+.tlist div{border-left:2px solid var(--link);padding:2px 0 2px 14px}
+.tlist b{display:block;font-weight:500;font-size:16.5px;margin-bottom:2px}
+.tlist span{color:var(--bone-dim);font-size:15px;line-height:1.5}
 footer{padding-bottom:130px}
 @media(max-width:900px){
   .gwrap{grid-template-columns:1fr;gap:26px}
   .card,.card.w7,.card.w5,.card.w4,.card.w8{grid-column:span 12}
   .asks{grid-template-columns:1fr}
+  .tl{grid-template-columns:1fr}
   .linkgrid .lcell{grid-column:span 12}
 }
 @media(max-width:560px){
@@ -188,6 +211,7 @@ footer{padding-bottom:130px}
   .phasebar button span{display:none}
   .facts .v{font-size:22px}
   .urow{grid-template-columns:110px 1fr}
+  .kgrow{grid-template-columns:62px 1fr 88px;gap:8px}
   .pcard,.card{padding:20px 18px}
   .pix canvas{width:100%;height:auto;aspect-ratio:1/1}
   .telemetry div:last-child{display:none}
@@ -202,9 +226,11 @@ footer{padding-bottom:130px}
 <div class="telemetry"><div class="sig"><span class="dot">●</span> WIRING THE MOON · LUNAR COMMS, NAVIGATION &amp; OBSERVATION</div><div><a id="srclink" href="#" target="_blank" rel="noopener">SOURCE: NASA SCaN · AUG 28 2026</a></div></div>
 <nav class="nav">
   <a class="brand" href="./"><b>Wiring</b> the Moon</a>
+  <a class="link" href="#traffic">Traffic</a>
   <a class="link" href="#talk">Talk</a>
   <a class="link" href="#navigate">Navigate</a>
   <a class="link" href="#see">See</a>
+  <a class="link" href="#base">Base</a>
   <a class="link" href="#build">Build</a>
   <button class="themebtn" id="theme-toggle" aria-label="Toggle light or dark mode">☀</button>
 </nav>
@@ -218,7 +244,7 @@ footer{padding-bottom:130px}
     <div class="kicker reveal">An explainer of NASA's lunar demand signal</div>
     <h1 class="reveal">The Moon, <span>connected</span></h1>
     <div class="expand reveal">A base at the lunar South Pole needs what any town needs: a connection, a map and a clock. This is NASA's own list of how much, how fast and how precise, one phase at a time.</div>
-    <div class="srcline reveal">Every number is from <a id="srclink2" href="#" target="_blank" rel="noopener">NASA SCaN's demand signal, August 28, 2026</a>. Use the phase switch at the bottom of the screen.</div>
+    <div class="srcline reveal">Every number is from two NASA documents: <a id="srclink2" href="#" target="_blank" rel="noopener">SCaN's demand signal</a> (tags <span class="ref">T1</span> to <span class="ref">T4</span>) and the <a class="uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide</a> (tags like <span class="ref ug">UG 4</span> give the page). Use the phase switch at the bottom of the screen.</div>
   </div>
 </section>
 
@@ -250,14 +276,45 @@ footer{padding-bottom:130px}
           <div><div class="k">Assets / site <span class="ref" title="Table 1">T1</span></div><div class="v" id="f-assets"></div></div>
           <div><div class="k">Relay coverage <span class="ref" title="Table 2">T2</span></div><div class="v" id="f-relay"></div></div>
         </div>
+        <div class="k mono" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim);margin-top:20px">Phase goals <span class="ref ug" title="Moon Base User's Guide, page 4">UG 4</span></div>
+        <ul class="goals" id="pgoals" aria-label="Phase goals" style="margin-top:10px"></ul>
       </div>
     </aside>
   </div>
 </div>
 
+<section id="traffic">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">01</span><h2>Traffic</h2></div>
+    <div class="sub reveal">Why the network has to grow: more flights, and far more mass on the ground. Every lander, rover and habitat is another user that needs a link, a position and the time.</div>
+    <div class="cards">
+      <div class="card w7 reveal">
+        <h3>Payload to the surface, per phase <span class="ref ug" title="Moon Base User's Guide, page 4">UG 4</span></h3>
+        <div class="cs">Approximate kilograms, as the guide rounds them.</div>
+        <div id="kgbars"></div>
+        <div class="callout" id="kgcall"></div>
+      </div>
+      <div class="card w5 reveal">
+        <h3>Launches and landings <span class="ref ug" title="Moon Base User's Guide, page 4">UG 4</span></h3>
+        <div class="cs">Totals for the selected phase.</div>
+        <div class="traffic">
+          <div><div class="k">Launches</div><div class="v" id="t-launch"></div></div>
+          <div><div class="k">Landings</div><div class="v" id="t-land"></div></div>
+          <div><div class="k">Payload</div><div class="v" id="t-kg"></div></div>
+        </div>
+        <div class="note">The guide points to nasa.gov/ignition for the current phasing details.</div>
+      </div>
+      <div class="card w12 reveal">
+        <h3>Crew on the Moon <span class="ref ug" title="Moon Base User's Guide, page 4">UG 4</span></h3>
+        <div class="tl" id="crewtl"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="talk">
   <div class="wrap">
-    <div class="head reveal"><span class="idx">01</span><h2>Talk</h2></div>
+    <div class="head reveal"><span class="idx">02</span><h2>Talk</h2></div>
     <div class="sub reveal">How much data has to move between the Moon and Earth, and over which links. Early missions talk straight to Earth. Relays in lunar orbit take over as they come online.</div>
     <div class="cards">
       <div class="card w7 reveal">
@@ -296,6 +353,12 @@ footer{padding-bottom:130px}
         </div>
       </div>
       <div class="card w12 reveal">
+        <h3>What Phase 1 is supposed to deliver <span class="ref ug" title="Moon Base User's Guide, page 8">UG 8</span></h3>
+        <div class="cs">The User's Guide sets its own communications targets for the first phase.</div>
+        <ul class="goals" id="ctargets" style="margin-top:0"></ul>
+        <div class="note">For comparison, the SCaN table <span class="ref" title="Table 2">T2</span> puts relay throughput at 50 Mbps in 2028 and 550 Mbps in 2032. One is a capability target and the other a demand forecast, so this site shows both and does not try to reconcile them.</div>
+      </div>
+      <div class="card w12 reveal">
         <h3>The links themselves</h3>
         <div class="cards linkgrid" style="gap:14px">
           <div class="lcell"><div class="k mono" style="font-size:11px;letter-spacing:.14em;color:var(--bone-dim);text-transform:uppercase">Radio <span class="ref" title="Section III, Communications">§III</span></div><div id="l-links" style="margin-top:6px"></div></div>
@@ -309,7 +372,7 @@ footer{padding-bottom:130px}
 
 <section id="navigate">
   <div class="wrap">
-    <div class="head reveal"><span class="idx">02</span><h2>Navigate</h2></div>
+    <div class="head reveal"><span class="idx">03</span><h2>Navigate</h2></div>
     <div class="sub reveal">There is no GPS at the Moon, so NASA plans one. The Lunar Augmented Navigation Service, LANS, has relays broadcast a navigation signal. See four or more at once and you can solve for position, velocity and time, just as your phone does on Earth.</div>
     <div class="cards">
       <div class="card w7 reveal navwrap">
@@ -329,13 +392,18 @@ footer{padding-bottom:130px}
         <h3>Why the clock matters</h3>
         <div class="cs" style="margin-bottom:0">Radio navigation measures distance with time: how long a signal took to arrive. Light covers about 300 metres in a microsecond <span class="mine" title="Physics, not from the paper">for scale · mine</span>, which is why the timing targets are so tight. The service must also run on its own time scale, Coordinated Lunar Time, traced back to UTC on Earth.</div>
       </div>
+      <div class="card w12 reveal">
+        <h3>Problems still open <span class="ref ug" title="Moon Base User's Guide, pages 12 and 13">UG 12–13</span></h3>
+        <div class="cs">Technology challenges the guide lists that touch the network directly.</div>
+        <div class="tlist" id="netch"></div>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="see">
   <div class="wrap">
-    <div class="head reveal"><span class="idx">03</span><h2>See</h2></div>
+    <div class="head reveal"><span class="idx">04</span><h2>See</h2></div>
     <div class="sub reveal">Cameras and sensors in orbit map the ground before anyone lands and keep watching after. The South Pole is hard to image: low sun, long shadows, craters that never see daylight.</div>
     <div class="cards">
       <div class="card w7 reveal">
@@ -365,20 +433,43 @@ footer{padding-bottom:130px}
   </div>
 </section>
 
+<section id="base">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">05</span><h2>The base it serves</h2></div>
+    <div class="sub reveal">The network exists for everything else at the base. These are the guide's Phase 1 targets for the systems that will depend on it, and the place they have to work.</div>
+    <div class="cards">
+      <div class="card w12 reveal">
+        <h3>The place <span class="ref ug" title="Moon Base User's Guide, page 7">UG 7</span></h3>
+        <div class="asks" id="env" style="margin-top:10px"></div>
+      </div>
+      <div class="card w12 reveal">
+        <h3>Phase 1 targets, by system <span class="ref ug" title="Moon Base User's Guide, pages 8 to 10">UG 8–10</span></h3>
+        <div class="asks" id="serves" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="build">
   <div class="wrap">
-    <div class="head reveal"><span class="idx">04</span><h2>Build</h2></div>
+    <div class="head reveal"><span class="idx">06</span><h2>Build</h2></div>
     <div class="sub reveal">The paper ends with the gaps NASA expects companies to help close. Its advice: watch the SCaN website and SAM.gov for upcoming opportunities.</div>
     <div class="asks" id="asks"></div>
+    <div class="card reveal" style="margin-top:22px">
+      <h3>Long-term partnership areas <span class="ref ug" title="Moon Base User's Guide, page 15">UG 15</span></h3>
+      <div class="cs">Beyond the immediate gaps, the guide names areas where NASA wants lasting partners.</div>
+      <div class="chips" id="partners"></div>
+    </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <div class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. All requirements are quoted from NASA's public white paper; comparisons marked "mine" are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data.</div>
+    <div class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. All requirements are quoted from two public NASA documents; comparisons marked "mine" are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data.</div>
     <div class="kicker" style="margin-bottom:12px">Sources</div>
     <div class="src">
       NASA SCaN · <a class="tlink" id="srclink3" href="#" target="_blank" rel="noopener">Lunar Communications, PNT and Observability Industry Demand Signal (PDF, Aug 28 2026)</a><br>
+      NASA · <a class="tlink uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide: Architecture Resources (PDF, April 2026)</a><br>
       NASA · <a class="tlink" href="https://www.nasa.gov/moonbase/" target="_blank" rel="noopener">Moon Base</a><br>
       NASA · <a class="tlink" href="https://www.nasa.gov/wp-content/uploads/2025/02/lunanet-interoperability-specification-v5-baseline.pdf" target="_blank" rel="noopener">LunaNet Interoperability Specification v5</a><br>
       NASA · <a class="tlink" href="https://www.nasa.gov/communicating-with-missions/" target="_blank" rel="noopener">SCaN website</a> · <a class="tlink" href="https://sam.gov/" target="_blank" rel="noopener">SAM.gov</a>
@@ -392,7 +483,8 @@ footer{padding-bottom:130px}
 <script src="assets/data.js"></script>
 <script src="assets/three.min.js"></script>
 <script>
-const D = window.DEMAND, S = window.SCALE;
+const D = window.DEMAND, S = window.SCALE, G = window.GUIDE;
+document.querySelectorAll('.uglink').forEach(a => { a.href = G.source.url; });
 const $ = id => document.getElementById(id);
 ['srclink','srclink2','srclink3'].forEach(id => { $(id).href = D.source.url; });
 
@@ -440,9 +532,29 @@ onPhase(p => {
     $('f-sites').textContent = p.region.sitesLabel;
     $('f-assets').textContent = p.region.assets;
     $('f-relay').textContent = p.comms.relayAvailLabel;
+    $('pgoals').innerHTML = G.traffic[p.n - 1].goals.map(g => `<li>${g}</li>`).join('');
     c.classList.remove('swap');
   }, 140);
 });
+
+/* ---------- Traffic (User's Guide, page 4) ---------- */
+const KGMAX = G.traffic[G.traffic.length - 1].kg;
+const fmtN = v => v.toLocaleString('en-US');
+onPhase((p, i) => {
+  const t = G.traffic[i];
+  $('t-launch').textContent = t.launches; $('t-land').textContent = t.landings; $('t-kg').innerHTML = '~' + fmtN(t.kg) + '<small>kg</small>';
+  $('kgbars').innerHTML = G.traffic.map((x, j) => `<div class="kgrow${j === i ? '' : ' off'}"><span class="kl">Phase ${j + 1}</span>
+    <div class="track"><div class="fill" style="width:${Math.max(1.2, x.kg / KGMAX * 100)}%"></div></div><span class="kv">~${fmtN(x.kg)} kg</span></div>`).join('');
+  const ratio = Math.round(t.kg / G.traffic[0].kg);
+  $('kgcall').innerHTML = i === 0 ? 'Phase 1 is about proving reliable access: 21 landings delivering about 4,000 kg in total.'
+    : `Phase ${i + 1} puts about <b>${ratio} times</b> Phase 1's mass on the surface, with a similar number of landings. Far more hardware on the ground, all of it needing the network.`;
+  $('crewtl').innerHTML = G.traffic.map((x, j) => `<div class="${j === i ? 'on' : ''}"><b>Phase ${j + 1}</b>${x.goals[3]}</div>`).join('');
+});
+$('ctargets').innerHTML = G.commsTargets.map(c => `<li>${c}</li>`).join('');
+$('netch').innerHTML = G.netChallenges.map(c => `<div><b>${c.k}</b><span>${c.d}</span></div>`).join('');
+$('env').innerHTML = G.environment.map(c => `<div class="ask"><h3>${c.k}</h3><p>${c.d}</p></div>`).join('');
+$('serves').innerHTML = G.serves.map(c => `<div class="ask"><div class="an">UG ${c.p}</div><h3>${c.k}</h3><p>${c.d}</p></div>`).join('');
+$('partners').innerHTML = G.partnerships.map(c => `<span>${c}</span>`).join('');
 
 /* ---------- Talk ---------- */
 const MAXR = 1300; /* bar scale in Mbps: just past the 1,250 goal */

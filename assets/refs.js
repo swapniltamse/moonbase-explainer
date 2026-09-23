@@ -77,6 +77,23 @@ window.CONFLICTS = [
     site: "Same radio links, two names." }
 ];
 
+/* Opinion, not NASA's: Swapnil's notes as a security engineer. Each links to
+   the requirement it reacts to. DRAFT until he approves the wording. */
+window.NOTES = [
+  { t: "The relay is not trusted with your data",
+    d: "The requirements say relays pass user data along without ever decrypting it. That is the same bargain payment networks make: the pipes in the middle route what they cannot read. Treat the transport as untrusted and you stop worrying about who owns each hop.",
+    src: "SRD 27" },
+  { t: "Authentication from day one",
+    d: "The Moon's navigation signal copies GPS on purpose. Civil GPS was never authenticated, and Earth is still dealing with spoofing because of it. Here the navigation service must authenticate itself and resist jamming from the start. That is the right lesson to have learned.",
+    src: "SRD 45 · AFS 47" },
+  { t: "Custody is a promise",
+    d: "Store-and-forward with custody transfer means each hop takes responsibility for a bundle before the previous one lets go. Financial messaging has worked this way for decades, because a lost payment instruction is not an option. A lost command near the Moon is not one either.",
+    src: "SRD 38 · LN 18" },
+  { t: "Autonomy raises the stakes",
+    d: "The network must also connect users near the Moon without routing through Earth. As more systems act without a human in the loop, the time and position they act on become the thing to protect. It is the same problem I see with AI agents: the risk is in the inputs they trust.",
+    src: "SRD 27" }
+];
+
 /* Standards page content. */
 window.STD = {
   lunanet: [

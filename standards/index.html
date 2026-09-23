@@ -40,6 +40,10 @@ body.light .btrack{background:rgba(20,18,12,.06)}
 .bkey{display:flex;gap:18px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--bone-dim);margin:4px 0 16px}
 .bkey span{display:inline-flex;align-items:center;gap:7px}
 .bkey i{width:16px;height:8px;border-radius:4px;display:inline-block}
+.opinion{border:1px dashed rgba(232,163,61,.55);border-radius:16px;padding:26px 28px;background:rgba(232,163,61,.04)}
+.opinion .by{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+.opinion .ask{background:transparent;border-color:rgba(232,163,61,.25)}
+.asks.two{grid-template-columns:repeat(2,1fr)}
 .tline{display:grid;gap:0}
 .tline .ti{display:grid;grid-template-columns:170px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
 .tline .ti:last-child{border-bottom:0}
@@ -47,6 +51,8 @@ body.light .btrack{background:rgba(20,18,12,.06)}
 .tline h3{font-size:20px;font-weight:400;margin:0 0 4px}
 .tline p{margin:0;color:var(--bone-dim);font-size:15.5px;line-height:1.55}
 @media(max-width:700px){
+  .asks.two{grid-template-columns:1fr}
+  .opinion{padding:18px 14px}
   .brow2,.bticks{grid-template-columns:1fr}
   .brow2 .br{text-align:left}
   .bticks .lab,.bticks .rt{display:none}
@@ -89,7 +95,7 @@ body.light .btrack{background:rgba(20,18,12,.06)}
   <div class="wrap">
     <div class="head reveal"><span class="idx">02</span><h2>Two ways to send data</h2></div>
     <div class="sub reveal">Links to the Moon come and go as relays move and the Moon turns. So the network offers two kinds of delivery.</div>
-    <div class="asks" id="s-send" style="grid-template-columns:repeat(2,1fr)"></div>
+    <div class="asks two" id="s-send"></div>
   </div>
 </section>
 
@@ -138,6 +144,17 @@ body.light .btrack{background:rgba(20,18,12,.06)}
   </div>
 </section>
 
+<section id="notes">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">07</span><h2>What a security engineer notices</h2></div>
+    <div class="sub reveal">Everything above is NASA's. This part is mine. I work on AI security in financial services, and reading these documents, I kept recognizing problems I see every day.</div>
+    <div class="opinion reveal">
+      <div class="by">Opinion · Swapnil Tamse · not from NASA</div>
+      <div class="asks two" id="s-notes"></div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <div class="wrap">
     <div class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Facts are quoted or paraphrased from public NASA, ESA and JAXA documents, each tagged with its page. Values these documents mark as to be confirmed or reviewed are labeled that way here.</div>
@@ -157,6 +174,7 @@ $('s-send').innerHTML = cards(T.send);
 $('s-security').innerHTML = cards(T.security);
 $('s-sar').innerHTML = cards(T.sar);
 $('s-bandnotes').innerHTML = cards(T.bandNotes);
+$('s-notes').innerHTML = cards(window.NOTES);
 
 $('s-gps').innerHTML = T.gps.map((r, i) => i === 0
   ? `<tr>${r.map(c => `<th>${c}</th>`).join('')}</tr>`

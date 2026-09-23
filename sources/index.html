@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sources · Wiring the Moon</title>
+<meta name="description" content="Every NASA document behind Wiring the Moon, what each one contributed, and the places where they disagree.">
+<link rel="canonical" href="https://moonbase.swapniltamse.com/sources/">
+<meta property="og:title" content="Where every number comes from">
+<meta property="og:description" content="Eight NASA sources, what each contributed, and where they disagree.">
+<meta property="og:image" content="https://moonbase.swapniltamse.com/assets/og.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23c9c4b8%22/%3E%3Ccircle cx=%2216%22 cy=%2226%22 r=%223.5%22 fill=%22%23e8a33d%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/moonbase.css">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<style>
+.srcs{display:grid;gap:14px}
+.srcrow{display:grid;grid-template-columns:70px 1fr;gap:18px;border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:18px 22px}
+.srcrow .tg{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;color:var(--link);padding-top:3px}
+.srcrow h3{font-size:19px;font-weight:400;margin:0 0 4px;line-height:1.3}
+.srcrow h3 a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(127,211,255,.35)}
+.srcrow .meta{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--bone-dim);letter-spacing:.04em}
+.srcrow p{margin:8px 0 0;color:var(--bone-dim);font-size:15.5px;line-height:1.5}
+.cf{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:20px 22px}
+.cf h3{font-size:21px;font-weight:400;margin:0 0 12px}
+.cf .side{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cf .side div{font-size:15px;line-height:1.5;color:var(--bone);padding:10px 12px;border-radius:10px;background:rgba(242,236,224,.035)}
+body.light .cf .side div{background:rgba(20,18,12,.04)}
+.cf .site{margin-top:12px;font-size:14.5px;color:var(--bone-dim)}
+.cf .site b{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-right:6px}
+.cfs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:800px){.cfs,.cf .side{grid-template-columns:1fr}.srcrow{grid-template-columns:1fr;gap:6px}}
+</style>
+</head>
+<body data-page="sources">
+<canvas id="stars"></canvas>
+<div class="progressbar" id="prog"></div>
+<div class="telemetry"><div class="sig"><span class="dot">●</span> WIRING THE MOON · SOURCES</div><div><a href="../standards/">THE STANDARDS ▸</a></div></div>
+<nav class="nav">
+  <a class="brand" href="../"><b>Wiring</b> the Moon</a>
+  <a class="link" href="../">Story</a>
+  <a class="link" href="../standards/">Standards</a>
+  <a class="link active" href="./">Sources</a>
+  <button class="themebtn" id="theme-toggle" aria-label="Toggle light or dark mode">☀</button>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker reveal">Receipts</div>
+    <h1 class="reveal">Where every <span>number</span> comes from</h1>
+    <div class="expand reveal">Eight NASA sources, every quote checked against its own text. What each one contributed, and the nine places where they do not agree.</div>
+  </div>
+</section>
+
+<section id="disagree" style="padding-top:30px">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">01</span><h2>Where the sources disagree</h2></div>
+    <div class="sub reveal">Plans change and documents are written years apart. Rather than quietly pick one number, this site shows both and says which one it uses.</div>
+    <div class="cfs" id="cfs"></div>
+  </div>
+</section>
+
+<section id="list">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">02</span><h2>The documents</h2></div>
+    <div class="sub reveal">The tag is what you see next to each fact on the site. Page numbers are the PDF's own page numbers.</div>
+    <div class="srcs" id="srcs"></div>
+    <div class="head reveal" style="margin-top:50px"><h2 style="font-size:28px">Could not use</h2></div>
+    <div class="srcs" id="unread"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Links go to NASA's own copies of each document.</div>
+    <div class="byline"><a href="../" style="color:var(--bone-dim);text-decoration:none;border-bottom:1px solid rgba(242,236,224,.2)">← Back to the story</a></div>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+<script src="../assets/refs.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+$('cfs').innerHTML = window.CONFLICTS.map(c => `<div class="cf reveal in"><h3>${c.k}</h3>
+  <div class="side"><div>${c.a}</div><div>${c.b}</div></div>
+  <div class="site"><b>This site</b>${c.site}</div></div>`).join('');
+$('srcs').innerHTML = window.SOURCES.map(s => `<div class="srcrow reveal in"><div class="tg">${s.tag === 'T' ? 'T1–T4' : s.tag}</div>
+  <div><h3><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></h3>
+  <div class="meta">${s.org} · ${s.date}</div><p>${s.note}</p></div></div>`).join('');
+$('unread').innerHTML = window.UNREAD.map(s => `<div class="srcrow"><div class="tg">—</div><div><h3>${s.title}</h3><p>${s.why}</p></div></div>`).join('');
+</script>
+</body>
+</html>

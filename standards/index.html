@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Standards · Wiring the Moon</title>
+<meta name="description" content="How the lunar network is specified: LunaNet, the Moon's GPS-like navigation signal, the radio band map, relay build-out and security. Every fact traced to a NASA document.">
+<link rel="canonical" href="https://moonbase.swapniltamse.com/standards/">
+<meta property="og:title" content="The Moon, specified">
+<meta property="og:description" content="LunaNet, the Moon's own GPS signal, the radio bands and relay security, every fact traced to a NASA document.">
+<meta property="og:image" content="https://moonbase.swapniltamse.com/assets/og.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23c9c4b8%22/%3E%3Ccircle cx=%2216%22 cy=%2226%22 r=%223.5%22 fill=%22%23e8a33d%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<link rel="stylesheet" href="../assets/moonbase.css">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<style>
+.hero{padding-bottom:10px}
+.src-chip{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--link);border:1px solid rgba(127,211,255,.35);
+  border-radius:5px;padding:0 5px;white-space:nowrap}
+.ask .src-chip{float:right;margin-left:8px}
+.gpst{width:100%;border-collapse:collapse;font-size:15.5px}
+.gpst th,.gpst td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.gpst th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.gpst td:first-child{color:var(--bone-dim);font-family:"IBM Plex Mono",monospace;font-size:12.5px;white-space:nowrap}
+.gpst td:nth-child(3){color:var(--bone-dim)}
+.bandmap{display:grid;gap:9px}
+.brow2{display:grid;grid-template-columns:170px 1fr 150px;gap:12px;align-items:center;font-size:14.5px}
+.brow2 .bn{color:var(--bone)}
+.brow2 .br{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--bone-dim);text-align:right;white-space:nowrap}
+.btrack{position:relative;height:14px;border-radius:7px;background:rgba(242,236,224,.05)}
+body.light .btrack{background:rgba(20,18,12,.06)}
+.btrack i{position:absolute;top:0;bottom:0;min-width:5px;border-radius:7px}
+.g-near{background:var(--link)} .g-earth{background:var(--gold)} .g-nav{background:#c08cff}
+.bticks{display:grid;grid-template-columns:170px 1fr 150px;gap:12px;margin-top:4px}
+.bticks .tk{position:relative;height:18px;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--bone-dim)}
+.bticks .tk span{position:absolute;transform:translateX(-50%)}
+.bkey{display:flex;gap:18px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--bone-dim);margin:4px 0 16px}
+.bkey span{display:inline-flex;align-items:center;gap:7px}
+.bkey i{width:16px;height:8px;border-radius:4px;display:inline-block}
+.tline{display:grid;gap:0}
+.tline .ti{display:grid;grid-template-columns:170px 1fr;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+.tline .ti:last-child{border-bottom:0}
+.tline .tw{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;color:var(--gold);padding-top:4px}
+.tline h3{font-size:20px;font-weight:400;margin:0 0 4px}
+.tline p{margin:0;color:var(--bone-dim);font-size:15.5px;line-height:1.55}
+@media(max-width:700px){
+  .brow2,.bticks{grid-template-columns:1fr}
+  .brow2 .br{text-align:left}
+  .bticks .lab,.bticks .rt{display:none}
+  .tline .ti{grid-template-columns:1fr;gap:4px}
+  .gpst{font-size:14px}
+  .gpst td:first-child{white-space:normal}
+}
+</style>
+</head>
+<body data-page="standards">
+<canvas id="stars"></canvas>
+<div class="progressbar" id="prog"></div>
+<div class="telemetry"><div class="sig"><span class="dot">●</span> WIRING THE MOON · THE STANDARDS</div><div><a href="../sources/">EVERY SOURCE ▸</a></div></div>
+<nav class="nav">
+  <a class="brand" href="../"><b>Wiring</b> the Moon</a>
+  <a class="link" href="../">Story</a>
+  <a class="link active" href="./">Standards</a>
+  <a class="link" href="../sources/">Sources</a>
+  <button class="themebtn" id="theme-toggle" aria-label="Toggle light or dark mode">☀</button>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker reveal">Go deeper</div>
+    <h1 class="reveal">The Moon, <span>specified</span></h1>
+    <div class="expand reveal">The rules that let many companies and agencies act as one network, the Moon's own GPS signal, the radio bands, and what keeps it all secure.</div>
+    <div class="srcline reveal">Every fact is tagged with its NASA source and PDF page, such as <span class="src-chip">LN 9</span>. The tags are explained on the <a href="../sources/">Sources</a> page.</div>
+  </div>
+</section>
+
+<section id="lunanet" style="padding-top:30px">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">01</span><h2>One network, many owners</h2></div>
+    <div class="sub reveal">LunaNet is the agreement that turns separate relays, ground stations and radios into one Moon-wide network, the way the internet joins networks that nobody owns outright.</div>
+    <div class="asks" id="s-lunanet"></div>
+  </div>
+</section>
+
+<section id="send">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">02</span><h2>Two ways to send data</h2></div>
+    <div class="sub reveal">Links to the Moon come and go as relays move and the Moon turns. So the network offers two kinds of delivery.</div>
+    <div class="asks" id="s-send" style="grid-template-columns:repeat(2,1fr)"></div>
+  </div>
+</section>
+
+<section id="gps">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">03</span><h2>GPS for the Moon</h2></div>
+    <div class="sub reveal">Relays broadcast a navigation signal, the Augmented Forward Signal. Receive four or more from relays spread across the sky and you can solve for where you are, just as with GPS. The signal borrows openly from GPS design.</div>
+    <div class="card w12 reveal">
+      <table class="gpst" id="s-gps"></table>
+      <div class="note" id="s-gpsnote"></div>
+      <div class="note">Four links from “geometrically diverse relays” is what defines the navigation service. <span class="src-chip">SRD 13</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="bands">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">04</span><h2>The radio band map</h2></div>
+    <div class="sub reveal">Which slices of the radio spectrum carry which links. The scale is logarithmic, so each step to the right is a multiple, not an addition.</div>
+    <div class="card w12 reveal">
+      <div class="bkey"><span><i class="g-near"></i>Near the Moon</span><span><i class="g-earth"></i>To and from Earth</span><span><i class="g-nav"></i>Navigation</span></div>
+      <div class="bandmap" id="s-bands"></div>
+      <div class="bticks"><div class="lab"></div><div class="tk" id="s-ticks"></div><div class="rt"></div></div>
+      <div class="asks" id="s-bandnotes" style="margin-top:22px"></div>
+    </div>
+  </div>
+</section>
+
+<section id="relays">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">05</span><h2>How the relays arrive</h2></div>
+    <div class="sub reveal">The relay requirements were written in 2022 and 2023. NASA's current pages describe what Phase 1 will actually fly. Both are shown, each with its date.</div>
+    <div class="card w12 reveal">
+      <div class="tline" id="s-relays"></div>
+      <div class="callout" id="s-relaynote"></div>
+    </div>
+  </div>
+</section>
+
+<section id="security">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">06</span><h2>Security and rescue</h2></div>
+    <div class="sub reveal">A network that carries crew voices, commands and navigation has to be protected, and it has to help when someone is in trouble.</div>
+    <div class="asks" id="s-security"></div>
+    <div class="asks" id="s-sar" style="margin-top:18px;grid-template-columns:1fr"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Facts are quoted or paraphrased from public NASA, ESA and JAXA documents, each tagged with its page. Values these documents mark as to be confirmed or reviewed are labeled that way here.</div>
+    <div class="byline"><a href="../sources/" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(232,163,61,.4)">Every source, and where they disagree ▸</a></div>
+    <div class="byline" style="margin-top:8px"><a href="../" style="color:var(--bone-dim);text-decoration:none;border-bottom:1px solid rgba(242,236,224,.2)">← Back to the story</a></div>
+  </div>
+</footer>
+
+<script src="../assets/site.js"></script>
+<script src="../assets/refs.js"></script>
+<script>
+const $ = id => document.getElementById(id), T = window.STD;
+const chip = s => `<span class="src-chip">${s}</span>`;
+const cards = (arr) => arr.map(c => `<div class="ask reveal in">${chip(c.src)}<h3>${c.t}</h3><p>${c.d}</p></div>`).join('');
+$('s-lunanet').innerHTML = cards(T.lunanet);
+$('s-send').innerHTML = cards(T.send);
+$('s-security').innerHTML = cards(T.security);
+$('s-sar').innerHTML = cards(T.sar);
+$('s-bandnotes').innerHTML = cards(T.bandNotes);
+
+$('s-gps').innerHTML = T.gps.map((r, i) => i === 0
+  ? `<tr>${r.map(c => `<th>${c}</th>`).join('')}</tr>`
+  : `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('');
+$('s-gpsnote').innerHTML = T.gpsNote + ' ' + chip('AFS 13–51');
+
+/* Log-scale band map: 1.8 GHz to 30 GHz. */
+const LO = Math.log10(1800), HI = Math.log10(30000);
+const x = mhz => (Math.log10(mhz) - LO) / (HI - LO) * 100;
+const G = { 'Near the Moon': 'g-near', 'To and from Earth': 'g-earth', 'Navigation': 'g-nav' };
+const fmtF = m => m >= 10000 ? (m / 1000).toFixed(2).replace(/0$/, '') + ' GHz' : m.toLocaleString('en-US') + ' MHz';
+$('s-bands').innerHTML = T.bands.map(([l, g, a, b, src]) =>
+  `<div class="brow2"><span class="bn">${l} ${chip(src)}</span>
+   <div class="btrack" role="img" aria-label="${l}: ${fmtF(a)} to ${fmtF(b)}"><i class="${G[g]}" style="left:${x(a)}%;width:${x(b) - x(a)}%"></i></div>
+   <span class="br">${fmtF(a)} – ${fmtF(b)}</span></div>`).join('');
+$('s-ticks').innerHTML = [2000, 3000, 5000, 8000, 10000, 20000, 30000]
+  .map(m => `<span style="left:${x(m)}%">${m / 1000} GHz</span>`).join('');
+
+$('s-relays').innerHTML = T.relays.map(r => `<div class="ti"><div class="tw">${r.when}</div><div><h3>${r.t} ${chip(r.src)}</h3><p>${r.d}</p></div></div>`).join('');
+$('s-relaynote').textContent = T.relayNote;
+</script>
+</body>
+</html>

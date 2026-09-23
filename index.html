@@ -283,7 +283,7 @@
 
 <footer>
   <div class="wrap">
-    <p class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Requirements are quoted from public NASA documents, and comparisons marked “mine” are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data.</p>
+    <p class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Requirements are quoted from public NASA documents, and comparisons marked “mine” are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data. South Pole close-up: LROC Wide Angle Camera south polar mosaic, NASA/GSFC/Arizona State University.</p>
     <p class="src">
       <a id="srclink3" href="#" target="_blank" rel="noopener">SCaN demand signal (PDF, August 28, 2026)</a><br>
       <a class="uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide (PDF, April 2026)</a><br>
@@ -573,7 +573,7 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
     relay: mk('tag relay', '<span class="t">Relay (schematic)</span>'),
     earth: mk('tag earth', '<span class="t">Toward Earth →</span>')
   };
-  const scaleEl = document.createElement('div'); scaleEl.className = 'scalebar'; scaleEl.innerHTML = '<i></i><span>100 km</span>'; holder.appendChild(scaleEl);
+  const scaleEl = document.createElement('div'); scaleEl.className = 'scalebar'; scaleEl.innerHTML = '<i></i><span>100 km</span><em>Image: LRO camera mosaic, NASA/GSFC/ASU</em>'; holder.appendChild(scaleEl);
   const EARTH = new THREE.Vector3(1, 0, 0);
 
   /* Relays: schematic ellipses with the slow, high end over the south, the
@@ -612,6 +612,45 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
     moonMat.map = t; moonMat.color.set(0xffffff); moonMat.needsUpdate = true; loading.style.display = 'none';
   }, undefined, () => { loading.textContent = 'Texture unavailable'; });
 
+  /* ---- Sharp South Pole: LRO camera mosaic (LROC WAC, NASA/GSFC/Arizona State
+     University) in polar stereographic projection, cropped to 20° from the pole.
+     Each vertex of a cap gets the UV the projection formula gives its lat/lon,
+     so the mosaic lands exactly where the global map would have put it. Loaded
+     only the first time someone opens the close-up. */
+  const POLAR_CMAX = 20 * Math.PI / 180, POLAR_RHO = Math.tan(POLAR_CMAX / 2);
+  let polarLoaded = false;
+  function loadPolar() {
+    if (polarLoaded) return; polarLoaded = true;
+    const img = new Image();
+    img.onload = () => {
+      /* Fade the outer edge into the global map so there is no visible seam. */
+      const N = img.width, cv = document.createElement('canvas'); cv.width = cv.height = N;
+      const g = cv.getContext('2d'); g.drawImage(img, 0, 0);
+      g.globalCompositeOperation = 'destination-in';
+      const grad = g.createRadialGradient(N / 2, N / 2, N * 0.36, N / 2, N / 2, N * 0.5);
+      grad.addColorStop(0, 'rgba(0,0,0,1)'); grad.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = grad; g.fillRect(0, 0, N, N);
+      const tex = new THREE.CanvasTexture(cv);
+      if ('SRGBColorSpace' in THREE) tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      const geo = new THREE.SphereGeometry(1.0004, 128, 48, 0, Math.PI * 2, Math.PI - POLAR_CMAX, POLAR_CMAX);
+      const pos = geo.attributes.position, uv = geo.attributes.uv;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i), r = Math.hypot(x, y, z);
+        const lat = Math.asin(y / r);
+        /* invert dir(): phi = atan2(z, -x), lon = phi / 2π * 360 - 180 */
+        const lon = (Math.atan2(z, -x) / (2 * Math.PI)) * 2 * Math.PI - Math.PI;
+        const rho = Math.tan((Math.PI / 2 + lat) / 2) / POLAR_RHO;   /* 0 at pole, 1 at 20° */
+        uv.setXY(i, 0.5 + 0.5 * rho * Math.sin(lon), 0.5 + 0.5 * rho * Math.cos(lon));
+      }
+      uv.needsUpdate = true;
+      const polar = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+      polar.renderOrder = -1;
+      scene.add(polar);
+    };
+    img.src = 'assets/south-pole-lroc.jpg';
+  }
+
   /* ---- Camera: orbit around a target, eased between two presets ---- */
   const VIEWS = {
     whole: { tx: 0, ty: -0.25, tz: 0, dist: 6.3, el: -0.88, fov: 38 },
@@ -623,6 +662,7 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
   const btnWhole = $('view-whole'), btnClose = $('view-close'), btnPause = $('view-pause');
   function setView(v) {
     view = v; el = VIEWS[v].el;
+    if (v === 'close') loadPolar();
     [[btnWhole, 'whole'], [btnClose, 'close']].forEach(([b, k]) => b && b.setAttribute('aria-pressed', String(k === v)));
     canvas.setAttribute('aria-label', v === 'whole'
       ? 'The whole Moon, tilted to show the South Pole, with relay satellites circling and linking to the base.'

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiring the Moon</title>
+<meta name="description" content="An independent, interactive explainer of NASA's lunar communications, navigation and observation needs, phase by phase, using only the numbers in NASA SCaN's August 2026 demand signal.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23c9c4b8%22/%3E%3Ccircle cx=%2216%22 cy=%2226%22 r=%223.5%22 fill=%22%23e8a33d%22/%3E%3C/svg%3E">
+<link rel="canonical" href="https://moonbase.swapniltamse.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wiring the Moon">
+<meta property="og:title" content="The Moon, connected">
+<meta property="og:description" content="What it takes to give a lunar base a connection, a map and a clock. NASA's own numbers, one phase at a time.">
+<meta property="og:url" content="https://moonbase.swapniltamse.com/">
+<meta property="og:image" content="https://moonbase.swapniltamse.com/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Moon, connected">
+<meta name="twitter:description" content="What it takes to give a lunar base a connection, a map and a clock. NASA's own numbers, one phase at a time.">
+<meta name="twitter:image" content="https://moonbase.swapniltamse.com/assets/og.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<style>
+:root{--link:#7fd3ff;--relay:#7fd3ff;--site:#e8a33d}
+body.light{--link:#1f6fb8;--relay:#1f6fb8;--site:#a86f10}
+.hero{padding:104px 0 30px;position:relative}
+.hero h1{font-size:clamp(40px,7vw,74px);font-weight:300;letter-spacing:-.02em;line-height:.95;margin-top:6px}
+.hero h1 span{font-style:italic;color:var(--gold)}
+.hero .expand{font-family:"Fraunces",serif;font-style:italic;font-weight:300;font-size:clamp(17px,2.4vw,24px);margin-top:.5em;opacity:.92;max-width:760px}
+.hero .srcline{margin-top:22px;font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em;color:var(--bone-dim)}
+.hero .srcline a{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(127,211,255,.35)}
+
+section{padding:70px 0;scroll-margin-top:84px}
+.ref{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--bone-dim);
+  border:1px solid var(--line);border-radius:5px;padding:0 4px;margin-left:6px;vertical-align:2px;white-space:nowrap;cursor:help}
+.mine{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.06em;color:var(--gold);
+  border:1px dashed rgba(232,163,61,.55);border-radius:5px;padding:0 4px;margin-left:6px;vertical-align:2px;white-space:nowrap;cursor:help}
+
+/* Phase switch: one control drives every number on the page. */
+.phasebar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:40;display:flex;gap:4px;padding:5px;
+  border:1px solid var(--line);border-radius:14px;background:rgba(10,14,28,.92);backdrop-filter:blur(8px);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);max-width:calc(100vw - 24px)}
+body.light .phasebar{background:rgba(255,253,248,.95);box-shadow:0 10px 30px rgba(40,30,10,.15)}
+.phasebar .pl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bone-dim);
+  align-self:center;padding:0 8px 0 6px}
+.phasebar button{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em;border:0;border-radius:10px;cursor:pointer;
+  background:transparent;color:var(--bone-dim);padding:8px 14px;line-height:1.25;text-align:left;transition:background .25s,color .25s}
+.phasebar button b{display:block;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.phasebar button span{font-size:10.5px;opacity:.85}
+.phasebar button:hover{color:var(--bone)}
+.phasebar button.on{background:var(--gold);color:#20160a}
+.phasebar button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+
+/* Globe + phase card */
+.gwrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.gleft,.gright{min-width:0}
+.globe-holder{position:relative;width:100%;aspect-ratio:1/1;max-width:540px;margin:0 auto}
+#globe{width:100%;height:100%;display:block;cursor:grab;touch-action:pan-y;
+  -webkit-mask-image:radial-gradient(closest-side,#000 82%,transparent);mask-image:radial-gradient(closest-side,#000 82%,transparent)}
+.nav .brand{white-space:nowrap}
+#globe:active{cursor:grabbing}
+.globe-holder .loading{position:absolute;inset:0;display:grid;place-items:center;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone-dim)}
+.fallimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:none;opacity:.8}
+.marklayer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
+.mk{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;transition:opacity .5s;
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:#f2ece0;white-space:nowrap}
+.mk .d{width:11px;height:11px;border-radius:50%;background:var(--site);box-shadow:0 0 0 2px rgba(4,6,13,.85),0 0 12px 2px rgba(232,163,61,.55);flex:none}
+.mk.site .t{display:none}
+.mk .t{background:rgba(4,6,13,.8);padding:2px 7px;border-radius:5px;border:1px solid rgba(242,236,224,.14)}
+.mk.earth{color:var(--link)}
+.mk.earth .t{border-color:rgba(127,211,255,.35);color:#7fd3ff}
+.legend{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:16px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--bone-dim)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{display:inline-block;flex:none}
+.lg-site i{width:10px;height:10px;border-radius:50%;background:var(--site)}
+.lg-relay i{width:9px;height:9px;transform:rotate(45deg);background:var(--relay)}
+.lg-link i{width:18px;height:0;border-top:2px solid var(--link)}
+.lg-dome i{width:16px;height:9px;border-radius:9px 9px 0 0;background:rgba(232,163,61,.35);border:1px solid var(--gold);border-bottom:0}
+.gcap{text-align:center;color:var(--bone-dim);font-size:13.5px;line-height:1.55;max-width:470px;margin:12px auto 0}
+
+.pcard{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:30px 32px;transition:opacity .3s}
+.pcard.swap{opacity:.3}
+.pcard .ptag{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.pcard h2{font-size:clamp(28px,3.6vw,40px);font-weight:300;margin:10px 0 12px}
+.pcard p{color:var(--bone-dim);font-size:17.5px;margin:0 0 22px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.facts div{background:var(--panel);padding:14px 16px}
+.facts .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--bone-dim)}
+.facts .v{font-family:"Fraunces",serif;font-size:26px;font-weight:300;margin-top:4px}
+
+/* Section scaffolding */
+.head{margin-bottom:10px}
+.cards{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+.card{grid-column:span 6;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:24px 26px;min-width:0}
+.card.w12{grid-column:span 12}.card.w7{grid-column:span 7}.card.w5{grid-column:span 5}.card.w4{grid-column:span 4}.card.w8{grid-column:span 8}
+.lcell{grid-column:span 4;min-width:0}
+.card h3{font-size:22px;font-weight:400;margin:0 0 4px}
+.card .cs{color:var(--bone-dim);font-size:15px;margin:0 0 18px;line-height:1.5}
+.big{font-family:"Fraunces",serif;font-size:clamp(34px,4.4vw,52px);font-weight:300;line-height:1}
+.big small{font-size:.42em;color:var(--bone-dim);margin-left:6px}
+.note{font-size:14.5px;color:var(--bone-dim);line-height:1.55;margin-top:14px}
+.callout{margin-top:16px;border-left:3px solid var(--gold);padding:10px 14px;background:rgba(232,163,61,.08);border-radius:0 10px 10px 0;font-size:15.5px}
+
+/* Throughput bars */
+.bars{display:flex;flex-direction:column;gap:18px}
+.brow .bl{display:flex;justify-content:space-between;gap:10px;font-size:15px;margin-bottom:6px}
+.brow .bl .bv{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--bone);white-space:nowrap}
+.track{position:relative;height:16px;border-radius:8px;background:rgba(242,236,224,.06);overflow:visible}
+body.light .track{background:rgba(20,18,12,.06)}
+.track .ghost{position:absolute;left:0;top:0;bottom:0;border-radius:8px;border:1px dashed var(--line)}
+.track .fill{position:absolute;left:0;top:0;bottom:0;border-radius:8px;background:linear-gradient(90deg,var(--low),var(--link));transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.track .fill.early{opacity:.4}
+.track .fiber{position:absolute;top:-6px;bottom:-6px;width:0;border-left:2px dotted var(--gold);z-index:2}
+.axis{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--bone-dim);margin-top:8px}
+.fiberkey{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--gold);margin-top:10px}
+
+/* Availability rings */
+.rings{display:flex;gap:26px;justify-content:space-around;flex-wrap:wrap}
+.ring{text-align:center}
+.ring svg{width:130px;height:130px;display:block;margin:0 auto}
+.ring .rl{font-size:14px;color:var(--bone-dim);max-width:150px;margin:8px auto 0;line-height:1.4}
+.ring circle.bg{stroke:rgba(242,236,224,.09)}
+body.light .ring circle.bg{stroke:rgba(20,18,12,.09)}
+.ring circle.fg{transition:stroke-dashoffset .9s cubic-bezier(.2,.7,.2,1)}
+
+/* Concurrent users */
+.utoggle{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.utoggle button{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;
+  border:0;background:transparent;color:var(--bone-dim);cursor:pointer}
+.utoggle button.on{background:var(--link);color:#05121d;font-weight:600}
+.ugrid{display:grid;gap:14px}
+.ucol .uy{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;color:var(--gold);margin-bottom:6px}
+.urow{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;margin-bottom:8px}
+.urow .un{font-size:14px;color:var(--bone-dim);line-height:1.3}
+.dots{display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:14px}
+.dots i{width:12px;height:12px;border-radius:50%;display:inline-block;transition:opacity .4s}
+.dots i.h{background:var(--link)}
+.dots i.l{border:2px solid var(--link);background:transparent}
+.dots .plus{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--bone-dim);margin-left:3px}
+.dots .na{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--bone-dim)}
+.ukey{display:flex;gap:16px;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--bone-dim);margin-top:6px}
+.ukey span{display:inline-flex;align-items:center;gap:6px}
+
+/* Data volume */
+.vol .vrow{margin-bottom:16px}
+.vol .vk{font-size:14.5px;color:var(--bone-dim);margin-bottom:6px}
+
+/* Navigation scale drawing */
+.navwrap svg{width:100%;height:auto;display:block;max-width:420px;margin:0 auto}
+.stat{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:15.5px}
+.stat:last-child{border-bottom:0}
+.stat .sv{font-family:"IBM Plex Mono",monospace;font-size:14px;text-align:right;white-space:nowrap}
+
+/* Observation pixel demo */
+.pix{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.pix canvas{width:220px;height:220px;border-radius:10px;border:1px solid var(--line);image-rendering:pixelated;flex:none}
+.pix .pt{flex:1;min-width:200px}
+.week{position:relative;height:26px;border-radius:6px;background:rgba(242,236,224,.05);margin:6px 0 4px;overflow:hidden}
+body.light .week{background:rgba(20,18,12,.05)}
+.week i{position:absolute;top:4px;bottom:4px;width:2px;background:var(--link);border-radius:1px}
+.wk{font-size:14.5px;color:var(--bone-dim);margin-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-size:14px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;color:var(--bone);background:rgba(242,236,224,.03)}
+
+/* Asks */
+.asks{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ask{border:1px solid var(--line);border-radius:14px;padding:20px 22px;background:var(--panel)}
+.ask .an{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.2em;color:var(--gold)}
+.ask h3{font-size:21px;font-weight:400;margin:8px 0 6px}
+.ask p{font-size:15.5px;color:var(--bone-dim);margin:0;line-height:1.5}
+
+footer{padding-bottom:130px}
+@media(max-width:900px){
+  .gwrap{grid-template-columns:1fr;gap:26px}
+  .card,.card.w7,.card.w5,.card.w4,.card.w8{grid-column:span 12}
+  .asks{grid-template-columns:1fr}
+  .linkgrid .lcell{grid-column:span 12}
+}
+@media(max-width:560px){
+  .wrap{padding:0 16px}
+  .phasebar .pl{display:none}
+  .phasebar button{padding:7px 10px}
+  .phasebar button span{display:none}
+  .facts .v{font-size:22px}
+  .urow{grid-template-columns:110px 1fr}
+  .pcard,.card{padding:20px 18px}
+  .pix canvas{width:100%;height:auto;aspect-ratio:1/1}
+  .telemetry div:last-child{display:none}
+  .hero{padding-top:128px}
+  .nav .brand{margin-right:8px}
+}
+</style>
+</head>
+<body data-page="home">
+<canvas id="stars"></canvas>
+<div class="progressbar" id="prog"></div>
+<div class="telemetry"><div class="sig"><span class="dot">●</span> WIRING THE MOON · LUNAR COMMS, NAVIGATION &amp; OBSERVATION</div><div><a id="srclink" href="#" target="_blank" rel="noopener">SOURCE: NASA SCaN · AUG 28 2026</a></div></div>
+<nav class="nav">
+  <a class="brand" href="./"><b>Wiring</b> the Moon</a>
+  <a class="link" href="#talk">Talk</a>
+  <a class="link" href="#navigate">Navigate</a>
+  <a class="link" href="#see">See</a>
+  <a class="link" href="#build">Build</a>
+  <button class="themebtn" id="theme-toggle" aria-label="Toggle light or dark mode">☀</button>
+</nav>
+
+<div class="phasebar" id="phasebar" role="radiogroup" aria-label="Moon Base phase">
+  <span class="pl">Phase</span>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="kicker reveal">An explainer of NASA's lunar demand signal</div>
+    <h1 class="reveal">The Moon, <span>connected</span></h1>
+    <div class="expand reveal">A base at the lunar South Pole needs what any town needs: a connection, a map and a clock. This is NASA's own list of how much, how fast and how precise, one phase at a time.</div>
+    <div class="srcline reveal">Every number is from <a id="srclink2" href="#" target="_blank" rel="noopener">NASA SCaN's demand signal, August 28, 2026</a>. Use the phase switch at the bottom of the screen.</div>
+  </div>
+</section>
+
+<div class="wrap" id="phases">
+  <div class="gwrap reveal">
+    <div class="gleft">
+      <div class="globe-holder">
+        <canvas id="globe" role="img" aria-label="The lunar South Pole with the service region, surface sites and relay satellites for the selected phase."></canvas>
+        <img class="fallimg" id="fallimg" src="assets/moon-surface.jpg" alt="">
+        <div class="marklayer" id="marks"></div>
+        <div class="loading" id="loading">Loading the Moon…</div>
+      </div>
+      <div class="legend">
+        <span class="lg-site"><i></i>Surface site</span>
+        <span class="lg-relay"><i></i>Relay (schematic)</span>
+        <span class="lg-link"><i></i>Link</span>
+        <span class="lg-dome"><i></i>Service region</span>
+      </div>
+      <div class="gcap">Service region and altitude are to scale. Site positions, relay orbits and relay counts are schematic: the paper sets coverage targets, not a constellation design.</div>
+    </div>
+    <aside class="gright">
+      <div class="pcard" id="pcard" aria-live="polite">
+        <div class="ptag" id="ptag"></div>
+        <h2 id="pname"></h2>
+        <p id="pstory"></p>
+        <div class="facts">
+          <div><div class="k">Altitude <span class="ref" title="Table 1">T1</span></div><div class="v" id="f-alt"></div></div>
+          <div><div class="k">Surface sites <span class="ref" title="Table 1">T1</span></div><div class="v" id="f-sites"></div></div>
+          <div><div class="k">Assets / site <span class="ref" title="Table 1">T1</span></div><div class="v" id="f-assets"></div></div>
+          <div><div class="k">Relay coverage <span class="ref" title="Table 2">T2</span></div><div class="v" id="f-relay"></div></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<section id="talk">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">01</span><h2>Talk</h2></div>
+    <div class="sub reveal">How much data has to move between the Moon and Earth, and over which links. Early missions talk straight to Earth. Relays in lunar orbit take over as they come online.</div>
+    <div class="cards">
+      <div class="card w7 reveal">
+        <h3>Peak real-time throughput <span class="ref" title="Table 2">T2</span></h3>
+        <div class="cs">Megabits per second. Dashed outlines show where the whole program is headed.</div>
+        <div class="bars" id="bars"></div>
+        <div class="axis"><span>0</span><span>250</span><span>500</span><span>750</span><span>1,000</span><span>1,250 Mbps</span></div>
+        <div class="fiberkey">┆ Gigabit home fiber, 1,000 Mbps <span class="mine" title="My comparison, not from the paper">for scale · mine</span></div>
+      </div>
+      <div class="card w5 reveal">
+        <h3>Availability <span class="ref" title="Table 2">T2</span></h3>
+        <div class="cs">Share of each Earth day the service is up. For relays, that also means a line of sight to the whole service region.</div>
+        <div class="rings">
+          <div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="50" fill="none" stroke-width="10"/><circle class="fg" id="ring-relay" cx="60" cy="60" r="50" fill="none" stroke="var(--link)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 60 60)"/><text id="ring-relay-t" x="60" y="67" text-anchor="middle" font-family="Fraunces,serif" font-size="24" fill="currentColor"></text></svg><div class="rl">Relay coverage and availability</div></div>
+          <div class="ring"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="50" fill="none" stroke-width="10"/><circle class="fg" id="ring-ground" cx="60" cy="60" r="50" fill="none" stroke="var(--gold)" stroke-width="10" stroke-linecap="round" transform="rotate(-90 60 60)"/><text id="ring-ground-t" x="60" y="67" text-anchor="middle" font-family="Fraunces,serif" font-size="24" fill="currentColor"></text></svg><div class="rl">Ground station availability</div></div>
+        </div>
+      </div>
+      <div class="card w7 reveal">
+        <h3>Users online at once <span class="ref" title="Table 2">T2</span></h3>
+        <div class="cs">Each dot is one user linked at the same moment. "Aggregation" means a surface node gathers everyone's data first and sends it up together.</div>
+        <div class="utoggle" role="group" aria-label="Surface aggregation">
+          <button data-a="0" class="on" aria-pressed="true">Without aggregation</button>
+          <button data-a="1" aria-pressed="false">With aggregation</button>
+        </div>
+        <div class="ugrid" id="ugrid"></div>
+        <div class="ukey"><span><i style="width:11px;height:11px;border-radius:50%;background:var(--link);display:inline-block"></i>High rate</span><span><i style="width:11px;height:11px;border-radius:50%;border:2px solid var(--link);display:inline-block;box-sizing:border-box"></i>Low rate</span><span>+ means "or more"</span></div>
+        <div class="callout" id="aggcall"></div>
+      </div>
+      <div class="card w5 reveal">
+        <h3>Data per day <span class="ref" title="Table 2">T2</span></h3>
+        <div class="cs">Recorded data sent home later, not live.</div>
+        <div class="vol">
+          <div class="vrow"><div class="vk">Large missions, such as an LRO replacement or Orion. Mostly direct to Earth.</div><div class="big" id="v-large"></div>
+            <div class="track" style="margin-top:10px"><div class="ghost" style="width:100%"></div><div class="fill" id="v-large-bar"></div></div></div>
+          <div class="vrow"><div class="vk">Small missions, such as commercial landers.</div><div class="big" id="v-small"></div></div>
+        </div>
+      </div>
+      <div class="card w12 reveal">
+        <h3>The links themselves</h3>
+        <div class="cards linkgrid" style="gap:14px">
+          <div class="lcell"><div class="k mono" style="font-size:11px;letter-spacing:.14em;color:var(--bone-dim);text-transform:uppercase">Radio <span class="ref" title="Section III, Communications">§III</span></div><div id="l-links" style="margin-top:6px"></div></div>
+          <div class="lcell"><div class="k mono" style="font-size:11px;letter-spacing:.14em;color:var(--bone-dim);text-transform:uppercase">On the surface <span class="ref" title="Section III, Communications">§III</span></div><div id="l-surface" style="margin-top:6px"></div></div>
+          <div class="lcell"><div class="k mono" style="font-size:11px;letter-spacing:.14em;color:var(--bone-dim);text-transform:uppercase">Every phase <span class="ref" title="Section III, Communications">§III</span></div><div style="margin-top:6px">More HD and UHD cameras across the surface, watching spacewalks and construction. Every camera is another user.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="navigate">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">02</span><h2>Navigate</h2></div>
+    <div class="sub reveal">There is no GPS at the Moon, so NASA plans one. The Lunar Augmented Navigation Service, LANS, has relays broadcast a navigation signal. See four or more at once and you can solve for position, velocity and time, just as your phone does on Earth.</div>
+    <div class="cards">
+      <div class="card w7 reveal navwrap">
+        <h3>How well you know where you are <span class="ref" title="Table 3">T3</span></h3>
+        <div class="cs">Position knowledge on the surface, drawn to scale. The bright ring is the selected phase.</div>
+        <svg id="navsvg" viewBox="-60 -60 120 120" role="img" aria-label="Concentric circles of 50, 25 and 10 metres with an Olympic pool for scale."></svg>
+        <div class="fiberkey" style="text-align:center">▭ Olympic pool, 50 × 25 m <span class="mine" title="My comparison, not from the paper">for scale · mine</span></div>
+        <div class="note">Need better than 10 m, say to avoid a hazard or dock? The paper says users add their own sensors, such as LiDAR and cameras, on top of LANS.</div>
+      </div>
+      <div class="card w5 reveal">
+        <h3>The full requirement <span class="ref" title="Table 3">T3</span></h3>
+        <div class="cs">Knowledge figures are absolute, 3D, 3-sigma.</div>
+        <div id="navstats"></div>
+        <div class="note" id="navnote"></div>
+      </div>
+      <div class="card w12 reveal">
+        <h3>Why the clock matters</h3>
+        <div class="cs" style="margin-bottom:0">Radio navigation measures distance with time: how long a signal took to arrive. Light covers about 300 metres in a microsecond <span class="mine" title="Physics, not from the paper">for scale · mine</span>, which is why the timing targets are so tight. The service must also run on its own time scale, Coordinated Lunar Time, traced back to UTC on Earth.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="see">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">03</span><h2>See</h2></div>
+    <div class="sub reveal">Cameras and sensors in orbit map the ground before anyone lands and keep watching after. The South Pole is hard to image: low sun, long shadows, craters that never see daylight.</div>
+    <div class="cards">
+      <div class="card w7 reveal">
+        <h3>Sharpness <span class="ref" title="Table 4">T4</span></h3>
+        <div class="pix">
+          <canvas id="pixc" width="220" height="220" aria-label="A two metre square patch of ground with two rocks, rendered at the selected pixel size."></canvas>
+          <div class="pt">
+            <div class="big" id="o-ssd"></div>
+            <div class="note" id="o-ssdl" style="margin-top:8px"></div>
+            <div class="note">A 2 m × 2 m patch with a 1 m boulder and a 40 cm rock <span class="mine" title="Illustrative rocks, not from the paper">illustrative · mine</span>, drawn at that pixel size. The paper wants pixels under half a metre so small hazards show up.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card w5 reveal">
+        <h3>How often it looks again <span class="ref" title="Table 4">T4</span></h3>
+        <div class="wk">Moon Base region: <b id="o-rb"></b></div>
+        <div class="week" id="wk-base" aria-hidden="true"></div>
+        <div class="wk">Whole South Pole region: <b id="o-rp"></b></div>
+        <div class="week" id="wk-pole" aria-hidden="true"></div>
+        <div class="axis"><span>One week, 168 hours. Each tick is a pass.</span></div>
+      </div>
+      <div class="card w12 reveal">
+        <h3>Also on the list <span class="ref" title="Table 4">T4</span></h3>
+        <div class="chips" id="o-extra"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="build">
+  <div class="wrap">
+    <div class="head reveal"><span class="idx">04</span><h2>Build</h2></div>
+    <div class="sub reveal">The paper ends with the gaps NASA expects companies to help close. Its advice: watch the SCaN website and SAM.gov for upcoming opportunities.</div>
+    <div class="asks" id="asks"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. All requirements are quoted from NASA's public white paper; comparisons marked "mine" are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data.</div>
+    <div class="kicker" style="margin-bottom:12px">Sources</div>
+    <div class="src">
+      NASA SCaN · <a class="tlink" id="srclink3" href="#" target="_blank" rel="noopener">Lunar Communications, PNT and Observability Industry Demand Signal (PDF, Aug 28 2026)</a><br>
+      NASA · <a class="tlink" href="https://www.nasa.gov/moonbase/" target="_blank" rel="noopener">Moon Base</a><br>
+      NASA · <a class="tlink" href="https://www.nasa.gov/wp-content/uploads/2025/02/lunanet-interoperability-specification-v5-baseline.pdf" target="_blank" rel="noopener">LunaNet Interoperability Specification v5</a><br>
+      NASA · <a class="tlink" href="https://www.nasa.gov/communicating-with-missions/" target="_blank" rel="noopener">SCaN website</a> · <a class="tlink" href="https://sam.gov/" target="_blank" rel="noopener">SAM.gov</a>
+    </div>
+    <div class="byline">A companion to <a href="https://grail.swapniltamse.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(232,163,61,.4)">Weighing the Moon</a>. Built by <a href="https://www.swapniltamse.com" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(232,163,61,.4)">Swapnil Tamse</a>.</div>
+    <div class="byline" style="margin-top:8px"><a href="how-it-works/" style="color:var(--bone-dim);text-decoration:none;border-bottom:1px solid rgba(242,236,224,.2)">Under the hood: how this site is built ▸</a></div>
+  </div>
+</footer>
+
+<script src="assets/site.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/three.min.js"></script>
+<script>
+const D = window.DEMAND, S = window.SCALE;
+const $ = id => document.getElementById(id);
+['srclink','srclink2','srclink3'].forEach(id => { $(id).href = D.source.url; });
+
+let phase = 0, agg = false;
+const listeners = [];
+const onPhase = fn => listeners.push(fn);
+
+/* ---------- Phase switch ---------- */
+const bar = $('phasebar');
+D.phases.forEach((p, i) => {
+  const b = document.createElement('button');
+  b.setAttribute('role', 'radio');
+  b.innerHTML = `<b>Phase ${p.n}</b><span>${p.years}</span>`;
+  b.addEventListener('click', () => setPhase(i));
+  bar.appendChild(b);
+});
+function setPhase(i, quiet) {
+  phase = i;
+  bar.querySelectorAll('button').forEach((b, j) => {
+    b.classList.toggle('on', j === i);
+    b.setAttribute('aria-checked', String(j === i));
+    b.tabIndex = j === i ? 0 : -1;
+  });
+  listeners.forEach(fn => fn(D.phases[i], i));
+  if (!quiet) { try { const u = new URL(location); u.searchParams.set('phase', i + 1); history.replaceState(null, '', u); } catch (e) {} }
+}
+bar.addEventListener('keydown', e => {
+  const n = D.phases.length;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { setPhase((phase + 1) % n); bar.querySelectorAll('button')[phase].focus(); e.preventDefault(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { setPhase((phase - 1 + n) % n); bar.querySelectorAll('button')[phase].focus(); e.preventDefault(); }
+});
+addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea,button')) return;
+  if (['1', '2', '3'].includes(e.key)) setPhase(+e.key - 1);
+});
+
+/* ---------- Phase card ---------- */
+onPhase(p => {
+  const c = $('pcard'); c.classList.add('swap');
+  setTimeout(() => {
+    $('ptag').textContent = `Phase ${p.n} · ${p.years}`;
+    $('pname').textContent = p.name;
+    $('pstory').textContent = p.story;
+    $('f-alt').textContent = p.region.alt + ' km';
+    $('f-sites').textContent = p.region.sitesLabel;
+    $('f-assets').textContent = p.region.assets;
+    $('f-relay').textContent = p.comms.relayAvailLabel;
+    c.classList.remove('swap');
+  }, 140);
+});
+
+/* ---------- Talk ---------- */
+const MAXR = 1300; /* bar scale in Mbps: just past the 1,250 goal */
+const pct = v => Math.min(100, v / MAXR * 100) + '%';
+const fmt = v => v.toLocaleString('en-US');
+const ROWS = [
+  { k: 'relayReturn', l: 'Lunar users to relay' },
+  { k: 'relayToEarth', l: 'Relays to Earth' },
+  { k: 'dwe', l: 'Lunar users straight to Earth' },
+  { k: 'forward', l: 'Earth to Moon, all links combined' }
+];
+const last = D.phases[D.phases.length - 1].comms;
+const series = (c, k) => Array.isArray(c[k]) ? c[k] : [{ v: c[k], y: null }];
+function milestoneText(ms) {
+  return ms.map(m => `${fmt(m.v)}${m.plus ? '+' : ''}${m.y ? ' · ' + m.y : ''}`).join('  →  ');
+}
+onPhase(p => {
+  $('bars').innerHTML = ROWS.map(r => {
+    const ms = series(p.comms, r.k), end = series(last, r.k);
+    const top = end[end.length - 1].v;
+    const fills = ms.map((m, i) => `<div class="fill${i < ms.length - 1 ? ' early' : ''}" style="width:0" data-w="${pct(m.v)}"></div>`).join('');
+    return `<div class="brow"><div class="bl"><span>${r.l}</span><span class="bv">${milestoneText(ms)}</span></div>
+      <div class="track"><div class="ghost" style="width:${pct(top)}"></div>${fills}<div class="fiber" style="left:${pct(S.fiberMbps)}"></div></div></div>`;
+  }).join('');
+  requestAnimationFrame(() => document.querySelectorAll('#bars .fill').forEach(f => { f.style.width = f.dataset.w; }));
+
+  const C = 2 * Math.PI * 50;
+  [['relay', p.comms.relayAvail, p.comms.relayAvailLabel], ['ground', 99, p.comms.groundAvail]].forEach(([k, v, lab]) => {
+    const r = $('ring-' + k); r.setAttribute('stroke-dasharray', C); r.setAttribute('stroke-dashoffset', C * (1 - v / 100));
+    $('ring-' + k + '-t').textContent = lab;
+  });
+
+  $('v-large').innerHTML = `${fmt(p.comms.large)}<small>GB / day, each</small>`;
+  $('v-large-bar').style.width = (p.comms.large / last.large * 100) + '%';
+  $('v-small').innerHTML = `${p.comms.small.gb}<small>GB / day each · ${p.comms.small.missions} missions</small>`;
+  $('l-links').textContent = p.comms.links;
+  $('l-surface').textContent = p.comms.surface;
+  renderUsers(p);
+});
+
+function dots(n, cls) { return Array.from({ length: n }, () => `<i class="${cls}"></i>`).join(''); }
+function userDots(u) {
+  if (!u) return '<span class="na">Limited / demonstration only</span>';
+  return dots(u.high, 'h') + dots(u.low, 'l') + '<span class="plus">+</span>';
+}
+function renderUsers(p) {
+  const cols = p.comms.users;
+  $('ugrid').innerHTML = cols.map(u => `<div class="ucol">${u.year ? `<div class="uy">${u.year}</div>` : ''}
+    <div class="urow"><div class="un">Via relay</div><div class="dots">${userDots(agg ? u.agg : u.noAgg)}</div></div>
+    <div class="urow"><div class="un">Straight to Earth</div><div class="dots">${userDots(u.dwe)}</div></div></div>`).join('');
+  const lastCol = cols[cols.length - 1];
+  const c = $('aggcall');
+  if (!lastCol.agg) { c.textContent = 'In Phase 1, aggregation on the surface is only a demonstration.'; return; }
+  const a = lastCol.noAgg.high, b = lastCol.agg.high;
+  c.innerHTML = `${lastCol.year ? 'By ' + lastCol.year + ', a' : 'A'}ggregating on the surface takes high-rate relay users from <b>${a}+</b> to <b>${b}+</b>. That is ${a - b} fewer simultaneous links the relays have to carry, solved by how data moves on the ground.`;
+}
+document.querySelectorAll('.utoggle button').forEach(b => b.addEventListener('click', () => {
+  agg = b.dataset.a === '1';
+  document.querySelectorAll('.utoggle button').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); });
+  renderUsers(D.phases[phase]);
+}));
+
+/* ---------- Navigate ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+onPhase(p => {
+  const svg = $('navsvg'), r = [50, 25, 10], [pw, ph] = S.poolM;
+  const light = document.body.classList.contains('light');
+  const ink = light ? '#191a1f' : '#f2ece0';
+  svg.innerHTML =
+    `<rect x="${-pw / 2}" y="${-ph / 2}" width="${pw}" height="${ph}" fill="none" stroke="var(--gold)" stroke-width=".6" stroke-dasharray="1.6 1.2"/>` +
+    r.map(v => {
+      const on = v === p.pnt.surface;
+      return `<circle cx="0" cy="0" r="${v}" fill="${on ? 'rgba(127,211,255,.10)' : 'none'}" stroke="var(--link)" stroke-width="${on ? 1.1 : .45}" stroke-opacity="${on ? 1 : .45}" ${on ? '' : 'stroke-dasharray="1.5 1.5"'}/>` +
+        `<text x="${v * .7071 + 1.5}" y="${-v * .7071 - 1.5}" font-family="IBM Plex Mono,monospace" font-size="${on ? 4.2 : 3.4}" fill="${ink}" fill-opacity="${on ? 1 : .55}">${v} m</text>`;
+    }).join('') +
+    `<circle cx="0" cy="0" r="1.2" fill="var(--site)"/>`;
+  const rows = [
+    ['Surface', p.pnt.surface + ' m'], ['Ascent and descent, per axis', p.pnt.ascent + ' m'], ['In orbit', p.pnt.orbit + ' m'],
+    ['Velocity', p.pnt.velocity], ['Service availability', p.pnt.avail], ['Time knowledge', p.pnt.time],
+    ['Time to first fix', p.pnt.ttff], ['Lunar time traced to UTC', p.pnt.ltc]
+  ];
+  $('navstats').innerHTML = rows.map(([k, v]) => `<div class="stat"><span>${k}</span><span class="sv">${v}</span></div>`).join('');
+  $('navnote').textContent = p.pnt.note || '';
+});
+
+/* ---------- See ---------- */
+onPhase(p => {
+  $('o-ssd').innerHTML = `${p.obs.ssd}<small>cm per pixel</small>`;
+  $('o-ssdl').textContent = p.obs.ssdTarget ? `Phase 1 threshold. The target is ${p.obs.ssdTarget} cm.` : p.obs.ssdLabel + '.';
+  drawPixels(p.obs.ssd);
+  $('o-rb').textContent = 'every ' + p.obs.revisitBase;
+  $('o-rp').textContent = p.obs.revisitPole === 'Limited' ? 'limited' : 'every ' + p.obs.revisitPole;
+  ticks($('wk-base'), parseFloat(p.obs.revisitBase));
+  ticks($('wk-pole'), p.obs.revisitPole === 'Limited' ? 0 : parseFloat(p.obs.revisitPole));
+  const extra = p.obs.extra || D.obsLater;
+  $('o-extra').innerHTML = extra.map(x => `<span>${x}</span>`).join('');
+});
+function ticks(el, hours) {
+  if (!hours) { el.innerHTML = '<span style="position:absolute;left:10px;top:3px;font-family:IBM Plex Mono,monospace;font-size:11px;color:var(--bone-dim)">limited, per Table 4</span>'; return; }
+  let h = ''; for (let t = 0; t < 168; t += hours) h += `<i style="left:${t / 168 * 100}%"></i>`;
+  el.innerHTML = h;
+}
+/* A 2 m square of regolith with two rocks, box-averaged down to the pixel size.
+   Rendered at 1 cm first, then each pixel takes the mean of its block, which is
+   what a real sensor does: a rock smaller than a pixel smears into its neighbours. */
+function drawPixels(cm) {
+  const c = $('pixc'), x = c.getContext('2d'), N = 200;
+  const hi = new Float32Array(N * N);
+  const rocks = [{ x: 78, y: 86, r: 50 }, { x: 152, y: 146, r: 20 }];
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    let v = 0.42 + 0.05 * Math.sin(i * 0.21 + j * 0.13) + 0.04 * Math.sin(i * 0.07 - j * 0.19);
+    for (const r of rocks) {
+      const d = Math.hypot(i - r.x, j - r.y);
+      if (d < r.r) { const lit = ((i - r.x) * -0.6 + (j - r.y) * -0.8) / r.r; v = 0.55 + 0.35 * lit; }
+      else if (d < r.r * 1.9 && (i - r.x) > 0 && (j - r.y) > 0) v *= 0.35; /* long polar shadow */
+    }
+    hi[j * N + i] = v;
+  }
+  const n = Math.ceil(N / cm);
+  x.clearRect(0, 0, c.width, c.height);
+  const px = c.width / (N / cm);
+  for (let bj = 0; bj < n; bj++) for (let bi = 0; bi < n; bi++) {
+    let s = 0, k = 0;
+    for (let j = bj * cm; j < Math.min(N, (bj + 1) * cm); j++) for (let i = bi * cm; i < Math.min(N, (bi + 1) * cm); i++) { s += hi[j * N + i]; k++; }
+    const g = Math.round(Math.max(0, Math.min(1, s / k)) * 235);
+    x.fillStyle = `rgb(${g},${g},${Math.round(g * .96)})`;
+    x.fillRect(Math.floor(bi * px), Math.floor(bj * px), Math.ceil(px), Math.ceil(px));
+  }
+}
+
+/* ---------- Build ---------- */
+$('asks').innerHTML = D.asks.map((a, i) => `<div class="ask reveal in"><div class="an">0${i + 1}</div><h3>${a.k}</h3><p>${a.d}</p></div>`).join('');
+
+/* ---------- Globe: the lunar South Pole ---------- */
+(function () {
+  const canvas = $('globe'), holder = canvas.parentElement, marks = $('marks'), loading = $('loading');
+  function fallback() { loading.style.display = 'none'; canvas.style.display = 'none'; marks.style.display = 'none'; $('fallimg').style.display = 'block'; }
+  if (!window.THREE) { fallback(); return; }
+  let renderer; try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { fallback(); return; }
+
+  const R_MOON_KM = 1737.4;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, 1, 0.01, 100);
+  const moonMat = new THREE.MeshBasicMaterial({ color: 0x333333 });
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1, 128, 96), moonMat));
+
+  function size() { const s = holder.clientWidth || 520; renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.setSize(s, s, false); }
+  addEventListener('resize', size); size();
+
+  /* Same lat/lon convention as the GRAIL globe: +X faces Earth, -Y is the South Pole. */
+  function dir(lat, lon) {
+    const u = 0.5 + lon / 360, phi = u * 2 * Math.PI, th = (90 - lat) * Math.PI / 180;
+    return new THREE.Vector3(-Math.cos(phi) * Math.sin(th), Math.cos(th), Math.sin(phi) * Math.sin(th));
+  }
+
+  /* Service region, Table 1: latitude -84 to -90, from the surface up to the
+     phase's altitude. The dome is a spherical cap at radius 1 + alt/R, to scale. */
+  const capAng = (90 + D.region.latFrom) * Math.PI / 180;
+  const domeMat = new THREE.MeshBasicMaterial({ color: 0xe8a33d, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false });
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 12, 0, Math.PI * 2, Math.PI - capAng, capAng), domeMat);
+  scene.add(dome);
+  const ringPts = []; for (let i = 0; i <= 128; i++) ringPts.push(dir(D.region.latFrom, i / 128 * 360 - 180).multiplyScalar(1.001));
+  const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts), new THREE.LineBasicMaterial({ color: 0xe8a33d, transparent: true, opacity: 0.9 }));
+  scene.add(ring);
+  /* The dome's rim, lifted to altitude, so the wall of the volume reads. */
+  const rimGeo = new THREE.BufferGeometry().setFromPoints(ringPts);
+  const rim = new THREE.Line(rimGeo, new THREE.LineBasicMaterial({ color: 0xe8a33d, transparent: true, opacity: 0.45 }));
+  scene.add(rim);
+  /* Vertical struts from the surface ring up to the rim, so the region reads
+     as a volume with a height rather than a disc floating over the pole. */
+  const wallBase = ringPts.filter((_, i) => i % 8 === 0);
+  const wall = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xe8a33d, transparent: true, opacity: 0.4 }));
+  scene.add(wall);
+  let wallR = 0;
+  function setWall(rr) { if (Math.abs(rr - wallR) < 1e-5) return; wallR = rr;
+    const pts = []; wallBase.forEach(q => { pts.push(q, q.clone().multiplyScalar(rr)); }); wall.geometry.setFromPoints(pts); }
+
+  /* Surface sites: schematic positions inside the region (the paper gives no coordinates). */
+  const SITES = [[-89.4, 20], [-88.3, 140], [-88.5, -100], [-86.6, 60], [-86.9, -160]];
+  const sites = SITES.map((ll, i) => {
+    const el = document.createElement('div'); el.className = 'mk site';
+    el.innerHTML = '<span class="d"></span>';
+    el.title = 'Surface site ' + (i + 1) + ' (schematic position)';
+    marks.appendChild(el);
+    return { p: dir(ll[0], ll[1]), el, a: 0 };
+  });
+  const regionEl = document.createElement('div'); regionEl.className = 'mk'; marks.appendChild(regionEl);
+  const earthEl = document.createElement('div'); earthEl.className = 'mk earth'; earthEl.innerHTML = '<span class="t">↗ To Earth</span>';
+  marks.appendChild(earthEl);
+  const EARTH = new THREE.Vector3(1, 0.02, 0).normalize();
+
+  /* Relays: schematic elliptical orbits with the slow, high end over the south,
+     the shape lunar relays use to linger over the pole. Counts per phase are
+     illustrative; the paper only says early Phase 1 has fewer than the 4 needed
+     for navigation. */
+  const RELAYS_PER_PHASE = [2, 4, 6];
+  const relays = [];
+  for (let i = 0; i < 6; i++) {
+    const lon = i * 60 + 15, la = -45 * Math.PI / 180, lr = lon * Math.PI / 180;
+    const apo = new THREE.Vector3(Math.cos(la) * Math.cos(lr), Math.sin(la), Math.cos(la) * Math.sin(lr)).normalize();
+    const n = new THREE.Vector3(-Math.sin(lr), 0, Math.cos(lr));
+    const b = new THREE.Vector3().crossVectors(n, apo).normalize();
+    const a = 1.34, e = 0.2, p = a * (1 - e * e);
+    const pos = th => { const r = p / (1 - e * Math.cos(th)); return apo.clone().multiplyScalar(r * Math.cos(th)).add(b.clone().multiplyScalar(r * Math.sin(th))); };
+    const pts = []; for (let k = 0; k <= 160; k++) pts.push(pos(k / 160 * Math.PI * 2));
+    const orbit = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x7fd3ff, transparent: true, opacity: 0 }));
+    const sat = new THREE.Mesh(new THREE.OctahedronGeometry(0.022), new THREE.MeshBasicMaterial({ color: 0x7fd3ff, transparent: true, opacity: 0 }));
+    const link = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({ color: 0x7fd3ff, transparent: true, opacity: 0 }));
+    scene.add(orbit, sat, link);
+    relays.push({ pos, orbit, sat, link, M: i * 2.3, e, a: 0 });
+  }
+  /* Kepler's equation, so relays really do dawdle at the high end of the orbit. */
+  function trueAnomaly(M, e) { let E = M; for (let k = 0; k < 6; k++) E = E - (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E)); return 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2)); }
+  const dwe = new THREE.Line(new THREE.BufferGeometry().setFromPoints([sites[0].p.clone().multiplyScalar(1.002), sites[0].p.clone().add(EARTH.clone().multiplyScalar(3))]),
+    new THREE.LineDashedMaterial({ color: 0x7fd3ff, dashSize: 0.04, gapSize: 0.03, transparent: true, opacity: 0.8 }));
+  dwe.computeLineDistances(); scene.add(dwe);
+
+  let target = { alt: 125, sites: 1, sitesLabel: '1', relays: 2, dweOp: 0.9 }, cur = { alt: 125 };
+  onPhase(p => { target = { alt: p.region.alt, sites: p.region.sites, sitesLabel: p.region.sitesLabel, relays: RELAYS_PER_PHASE[p.n - 1], dweOp: p.n === 1 ? 0.9 : 0.4 }; });
+
+  new THREE.TextureLoader().load('assets/moon-surface.jpg', t => {
+    if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    moonMat.map = t; moonMat.color.set(0xffffff); moonMat.needsUpdate = true; loading.style.display = 'none';
+  }, undefined, () => { loading.textContent = 'Texture unavailable'; });
+
+  /* Camera circles the pole: azimuth drifts, elevation is fixed low enough to see
+     the dome in profile and high enough to see the sites. Drag to turn. */
+  let az = 0.6, dragging = false, px = 0, hold = 0;
+  const reduced = window.__reducedMotion;
+  canvas.addEventListener('pointerdown', e => { dragging = true; px = e.clientX; hold = Date.now() + 8000; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e => { if (!dragging) return; az -= (e.clientX - px) * 0.008; px = e.clientX; });
+  addEventListener('pointerup', () => { dragging = false; });
+
+  const tmp = new THREE.Vector3();
+  let lastT = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
+    if (!dragging && !reduced && Date.now() > hold) az += dt * 0.05;
+    const dist = 2.9, el = -1.0;  /* elevation (radians) below the equator: about 60° */
+    camera.position.set(Math.cos(az) * Math.cos(el) * dist, Math.sin(el) * dist, Math.sin(az) * Math.cos(el) * dist);
+    camera.lookAt(0, -0.82, 0);
+
+    const k = 1 - Math.pow(0.02, dt);
+    cur.alt += (target.alt - cur.alt) * k;
+    const rr = 1 + cur.alt / R_MOON_KM;
+    dome.scale.setScalar(rr); rim.scale.setScalar(rr); setWall(rr);
+    dwe.material.opacity += (target.dweOp - dwe.material.opacity) * k;
+
+    relays.forEach((r, i) => {
+      const want = i < target.relays ? 1 : 0; r.a += (want - r.a) * k;
+      if (!reduced) r.M += dt * 0.16;
+      /* pos() measures from apoapsis; Kepler's angle is from periapsis, hence + π. */
+      const p = r.pos(trueAnomaly(r.M % (Math.PI * 2), r.e) + Math.PI);
+      r.sat.position.copy(p); r.sat.material.opacity = r.a; r.orbit.material.opacity = 0.22 * r.a;
+      /* A link is drawn only when the relay is above the site's horizon. */
+      let best = null, bestDot = 0.05;
+      sites.forEach((s, j) => { if (j >= target.sites) return; const d = tmp.copy(p).sub(s.p).normalize().dot(s.p); if (d > bestDot) { bestDot = d; best = s; } });
+      if (best) { r.link.geometry.setFromPoints([best.p.clone().multiplyScalar(1.002), p]); r.link.material.opacity = 0.55 * r.a; }
+      else r.link.material.opacity = 0;
+    });
+
+    const w = holder.clientWidth, h = holder.clientHeight;
+    const camDir = camera.position.clone().normalize();
+    sites.forEach((s, i) => {
+      const want = i < target.sites ? 1 : 0; s.a += (want - s.a) * k;
+      const q = s.p.clone().multiplyScalar(1.004).project(camera);
+      const facing = s.p.dot(tmp.copy(camera.position).sub(s.p).normalize());
+      s.el.style.left = (q.x * .5 + .5) * w + 'px'; s.el.style.top = (-q.y * .5 + .5) * h + 'px';
+      s.el.style.opacity = facing > 0 ? s.a : 0;
+    });
+    /* Label sits just under the lowest on-screen point of the surface ring. */
+    let best = null; for (let i = 0; i < 360; i += 15) { const c = dir(D.region.latFrom, i - 180).project(camera); if (!best || c.y < best.y) best = c; }
+    regionEl.innerHTML = `<span class="t">Service region · ${target.alt} km up</span>`;
+    regionEl.style.transform = 'translate(-50%,10px)';
+    regionEl.style.left = (best.x * .5 + .5) * w + 'px'; regionEl.style.top = (-best.y * .5 + .5) * h + 'px';
+    const eq = sites[0].p.clone().add(EARTH.clone().multiplyScalar(0.55)).project(camera);
+    earthEl.style.left = (eq.x * .5 + .5) * w + 'px'; earthEl.style.top = (-eq.y * .5 + .5) * h + 'px';
+    earthEl.style.opacity = (eq.z < 1 && Math.abs(eq.x) < 0.92 && Math.abs(eq.y) < 0.92) ? dwe.material.opacity : 0;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* Start: ?phase=2 deep-links a phase. */
+const qp = parseInt(new URLSearchParams(location.search).get('phase'), 10);
+setPhase(qp >= 1 && qp <= 3 ? qp - 1 : 0, true);
+document.getElementById('theme-toggle').addEventListener('click', () => setPhase(phase, true));
+</script>
+</body>
+</html>

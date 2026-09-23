@@ -12,7 +12,7 @@ Independent project. Not affiliated with, produced by, or endorsed by NASA.
 
 Three rules shaped every decision.
 
-1. **Every number is traceable.** Each figure carries a tag naming its source document and table or PDF page (`T2`, `UG 4`, `SRD 27`). A reviewer can check any value against the original in under a minute.
+1. **Every number is traceable.** Each figure carries a tag naming its source document and table or PDF page (`T2`, `UG 4`, `SRD 27`). Every tag links to its source on the Sources page, so a reviewer can check any value against the original in under a minute.
 2. **Nothing is invented, and the exceptions are labeled.** Where a lay reader needs a yardstick (gigabit home fiber, an Olympic pool, how far light travels in a microsecond), it is tagged `mine` in a dashed box. Schematic elements, such as relay orbits the paper does not specify, are captioned as schematic.
 3. **Disagreement is shown.** When sources conflict, the site shows both values and states which one it uses. It never silently picks one. The [Sources page](https://moonbase.swapniltamse.com/sources/) logs nine such conflicts, including NASA's own phase dates differing between a web page and the paper published four days later.
 
@@ -45,7 +45,7 @@ Relay orbits are schematic, because the requirements specify coverage, not const
 
 ### Figures that stay honest at scale
 
-- **Navigation accuracy.** The 50, 25 and 10 m rings and the Olympic pool share one metric coordinate system, so the comparison is exact.
+- **Navigation accuracy.** The 50, 25 and 10 m uncertainty circles are drawn over a 300 m patch of real terrain near the pole at 1 m per pixel, from LRO's Narrow Angle Camera polar mosaic. That mosaic tile is a 2 GB uncompressed GeoTIFF, 45,488 pixels square. Rather than download it, a small file-like wrapper serves `tifffile` over HTTP range requests: the header costs 1 MB, the strip offsets give each row's byte position, and each candidate patch is one contiguous range of about 14 MB. The circles, the terrain and an Olympic pool share one metric coordinate system, so every comparison is exact.
 - **Imaging resolution.** A 2 m patch of ground with two rocks is rendered at 1 cm, then each output pixel is the mean of its block, which is how a sensor integrates light. At 50 cm the patch is 16 pixels; at 25 cm the boulder begins to hold its outline.
 - **Radio bands.** The band map uses a logarithmic axis from 2 to 30 GHz, so S-band, X-band and K-band allocations are all legible on one row.
 - **Service volume.** The service region and its altitude (125 km, then 200 km) are drawn to scale against the Moon's 1,737.4 km radius, with a live 100 km scale bar in the close-up.
@@ -117,6 +117,7 @@ Code is released under the [MIT License](LICENSE). Third-party assets keep their
 
 - Moon surface texture: [Solar System Scope](https://www.solarsystemscope.com/textures/), CC BY 4.0, based on NASA data.
 - South Pole mosaic: LROC Wide Angle Camera, NASA/GSFC/Arizona State University (Speyerer et al., 2020, Lunar Surface Science Workshop, abstract 5132).
+- 1 m terrain patch: LROC Narrow Angle Camera controlled South Pole mosaic, NASA/GSFC/Arizona State University (Archinal et al., 2023, LPSC abstract 2333).
 - [three.js](https://threejs.org/), MIT License, vendored in `assets/three.min.js`.
 - NASA documents are public. Quotations are attributed to their source and page.
 

@@ -22,6 +22,8 @@
 .hero .deck{font-size:21px;max-width:44ch;margin:22px 0 12px}
 .srcs{display:grid;gap:0}
 .srcrow{display:grid;grid-template-columns:90px 1fr;gap:18px;border-top:1px solid var(--line);padding:22px 0}
+.srcrow:target{background:var(--blue-soft);outline:2px solid var(--blue);outline-offset:6px;border-radius:4px}
+.srcrow{scroll-margin-top:90px}
 .srcrow .tg{font-family:var(--mono);font-size:16px;color:var(--blue);padding-top:2px}
 .srcrow h3{font-size:20px;margin:0 0 4px;line-height:1.3}
 .srcrow h3 a{color:inherit}
@@ -89,7 +91,7 @@ const $ = id => document.getElementById(id);
 $('cfs').innerHTML = window.CONFLICTS.map(c => `<div class="cf reveal in"><h3>${c.k}</h3>
   <div class="side"><div>${c.a}</div><div>${c.b}</div></div>
   <div class="site"><b>This site:</b>${c.site}</div></div>`).join('');
-$('srcs').innerHTML = window.SOURCES.map(s => `<div class="srcrow reveal in"><div class="tg">${s.tag === 'T' ? 'T1–T4' : s.tag}</div>
+$('srcs').innerHTML = window.SOURCES.map(s => `<div class="srcrow reveal in" id="src-${s.tag}"><div class="tg">${s.tag === 'T' ? 'T1–T4' : s.tag}</div>
   <div><h3><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></h3>
   <div class="meta">${s.org}, ${s.date}</div><p>${s.note}</p></div></div>`).join('');
 $('unread').innerHTML = window.UNREAD.map(s => `<div class="srcrow"><div class="tg">—</div><div><h3>${s.title}</h3><p>${s.why}</p></div></div>`).join('');

@@ -46,7 +46,7 @@
     <div class="hero-text">
       <h1 id="hero-title">What it takes to put the Moon online</h1>
       <p class="deck">A base at the lunar South Pole needs what any town needs: a connection, a map and a clock. These are NASA's own numbers for each, phase by phase.</p>
-      <p class="srcnote">Every figure carries a tag for its source, like <span class="ref">T2</span> for a table in <a id="srclink" href="#" target="_blank" rel="noopener">SCaN's demand signal</a> or <span class="ref ug">UG 4</span> for a page of the <a class="uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide</a>. Pick a phase in the bar above.</p>
+      <p class="srcnote">Every figure carries a tag for its source, like <span class="ref">T2</span> for a table in <a id="srclink" href="#" target="_blank" rel="noopener">SCaN's demand signal</a> or <span class="ref ug">UG 4</span> for a page of the <a class="uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide</a>. Select any tag to see its source. Pick a phase in the bar above.</p>
       <nav class="jump" aria-label="On this page">
         <a href="#traffic">Traffic</a><a href="#talk">Talk</a><a href="#navigate">Navigate</a><a href="#see">See</a><a href="#base">The base</a><a href="#build">Build</a>
       </nav>
@@ -189,10 +189,10 @@
     <div class="section-head"><h2>Navigate</h2><p>There is no GPS at the Moon, so NASA plans one. The Lunar Augmented Navigation Service, LANS, has relays broadcast a navigation signal. See four or more at once and you can solve for position, velocity and time, just as your phone does on Earth.</p></div>
     <div class="cards">
       <div class="card w7 reveal navwrap">
-        <h3>How well you know where you are <span class="ref" title="Table 3">T3</span></h3>
-        <div class="cs">Position knowledge on the surface, drawn to scale. The bright ring is the selected phase.</div>
-        <svg id="navsvg" viewBox="-60 -60 120 120" role="img" aria-label="Concentric circles of 50, 25 and 10 metres with an Olympic pool for scale."></svg>
-        <div class="fiberkey" style="text-align:center">▭ Olympic pool, 50 × 25 m <span class="mine" title="My comparison, not from the paper">for scale, mine</span></div>
+        <h3>How close is “you are here”? <span class="ref" title="Table 3">T3</span></h3>
+        <div class="cs">The map says you are at the marker. You are actually somewhere inside the blue circle, <abbr class="hint" title="The paper's figures are 3-sigma: the true position is inside the circle about 99.7% of the time.">almost every time</abbr>. A smaller circle means better navigation.</div>
+        <svg id="navsvg" viewBox="-150 -150 300 300" role="img" aria-label=""></svg>
+        <div class="navkey">Real terrain near the South Pole, 88.9° S, at 1 m per pixel (LRO Narrow Angle Camera, NASA/GSFC/ASU). Everything is to scale. Olympic pool, 50 × 25 m <span class="mine" title="My comparison, not from the paper">for scale, mine</span></div>
         <div class="note">Need better than 10 m, say to avoid a hazard or dock? The paper says users add their own sensors, such as LiDAR and cameras, on top of LANS.</div>
       </div>
       <div class="card w5 reveal">
@@ -283,7 +283,7 @@
 
 <footer>
   <div class="wrap">
-    <p class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Requirements are quoted from public NASA documents, and comparisons marked “mine” are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data. South Pole close-up: LROC Wide Angle Camera south polar mosaic, NASA/GSFC/Arizona State University.</p>
+    <p class="disclaimer">Independent educational explainer. Not affiliated with, produced by, or endorsed by NASA. Requirements are quoted from public NASA documents, and comparisons marked “mine” are the author's. Moon texture by Solar System Scope (CC BY 4.0), based on NASA data. South Pole close-up and 1 m terrain: LROC Wide and Narrow Angle Camera polar mosaics, NASA/GSFC/Arizona State University.</p>
     <p class="src">
       <a id="srclink3" href="#" target="_blank" rel="noopener">SCaN demand signal (PDF, August 28, 2026)</a><br>
       <a class="uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide (PDF, April 2026)</a><br>
@@ -442,17 +442,27 @@ document.querySelectorAll('.utoggle button').forEach(b => b.addEventListener('cl
 /* ---------- Navigate ---------- */
 const NS = 'http://www.w3.org/2000/svg';
 onPhase(p => {
-  const svg = $('navsvg'), r = [50, 25, 10], [pw, ph] = S.poolM;
-  const light = document.body.classList.contains('light');
-  const ink = light ? '#191a1f' : '#f2ece0';
+  /* Drawn in metres over a 300 m patch of real terrain. The paper's figures are
+     radii (3-sigma, 3D), so each circle's width across is twice the figure. */
+  const svg = $('navsvg'), [pw, ph] = S.poolM;
+  const PH = [[1, 50], [2, 25], [3, 10]];
+  const lab = (x, y, t, size, weight, anchor) => `<text x="${x}" y="${y}" text-anchor="${anchor || 'start'}" font-family="DM Mono,monospace" font-size="${size}" font-weight="${weight || 400}" fill="#f4f4f1" stroke="#17171b" stroke-width="3" paint-order="stroke">${t}</text>`;
+  svg.setAttribute('aria-label', `Phase ${p.n}: the true position is inside a circle ${p.pnt.surface * 2} metres across, drawn over real lunar terrain with circles for the other phases and an Olympic pool for scale.`);
   svg.innerHTML =
-    `<rect x="${-pw / 2}" y="${-ph / 2}" width="${pw}" height="${ph}" fill="none" stroke="var(--bone)" stroke-width=".6" stroke-dasharray="1.6 1.2"/>` +
-    r.map(v => {
+    `<image href="assets/terrain-1m.jpg" x="-150" y="-150" width="300" height="300" preserveAspectRatio="none"/>` +
+    PH.map(([n, v]) => {
       const on = v === p.pnt.surface;
-      return `<circle cx="0" cy="0" r="${v}" fill="${on ? 'var(--blue-soft)' : 'none'}" stroke="var(--link)" stroke-width="${on ? 1.1 : .45}" stroke-opacity="${on ? 1 : .45}" ${on ? '' : 'stroke-dasharray="1.5 1.5"'}/>` +
-        `<text x="${v * .7071 + 1.5}" y="${-v * .7071 - 1.5}" font-family="DM Mono,monospace" font-size="${on ? 4.2 : 3.4}" fill="${ink}" fill-opacity="${on ? 1 : .55}">${v} m</text>`;
+      return `<circle cx="0" cy="0" r="${v}" fill="${on ? 'rgba(90,169,255,.28)' : 'none'}" stroke="${on ? '#5aa9ff' : '#f4f4f1'}" stroke-width="${on ? 2.2 : 1}" stroke-opacity="${on ? 1 : .75}" ${on ? '' : 'stroke-dasharray="4 3"'}/>`;
     }).join('') +
-    `<circle cx="0" cy="0" r="1.2" fill="var(--site)"/>`;
+    PH.map(([n, v]) => {
+      const on = v === p.pnt.surface;
+      return lab(0, -v - 4, `Phase ${n}: ${v * 2} m across`, on ? 10 : 8.5, on ? 500 : 400, 'middle');
+    }).join('') +
+    `<rect x="${140 - pw}" y="${140 - ph}" width="${pw}" height="${ph}" fill="rgba(23,23,27,.35)" stroke="#f4f4f1" stroke-width="1.2" stroke-dasharray="4 3"/>` +
+    lab(140 - pw, 140 - ph - 5, 'Olympic pool', 8.5) +
+    `<circle cx="0" cy="0" r="3.2" fill="#f64137" stroke="#17171b" stroke-width="1.4"/>` +
+    lab(-58, 76, 'You are here', 9, 500) +
+    `<line x1="-30" y1="68" x2="-3" y2="4" stroke="#f4f4f1" stroke-width="1"/>`;
   const rows = [
     ['Surface', p.pnt.surface + ' m'], ['Ascent and descent, per axis', p.pnt.ascent + ' m'], ['In orbit', p.pnt.orbit + ' m'],
     ['Velocity', p.pnt.velocity], ['Service availability', p.pnt.avail], ['Time knowledge', p.pnt.time],

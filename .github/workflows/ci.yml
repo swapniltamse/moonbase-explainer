@@ -1,0 +1,38 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    name: data, accessibility and links
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Downloadable data matches the site's data files
+        run: node tools/export-data.mjs --check
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test tools
+        run: |
+          pip install "playwright==1.49.1" "pypdf==6.14.2"
+          python -m playwright install --with-deps chromium
+
+      - name: Accessibility (WCAG 2.1 AA, every page, both themes) and mobile overflow
+        run: python tests/a11y.py
+
+      - name: External links resolve
+        run: python tests/check_links.py

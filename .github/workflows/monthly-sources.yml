@@ -1,0 +1,54 @@
+name: monthly source check
+
+# NASA documents and pages change. Once a month, re-download every cited PDF and
+# confirm each quote is still on its cited page, confirm the watched NASA pages
+# still say what the site relies on, and re-check links. Any failure opens an
+# issue so a person can review the site against the change.
+
+on:
+  schedule:
+    - cron: '0 14 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install "pypdf==6.14.2"
+
+      - name: Quotes are still on their cited PDF pages
+        id: quotes
+        continue-on-error: true
+        run: python tests/verify_quotes.py 2>&1 | grep -v "wrong pointing object" | tee quotes.log; exit ${PIPESTATUS[0]}
+
+      - name: Watched NASA pages still say what the site relies on
+        id: watch
+        continue-on-error: true
+        run: python tests/source_watch.py | tee watch.log; exit ${PIPESTATUS[0]}
+
+      - name: External links resolve
+        id: links
+        continue-on-error: true
+        run: python tests/check_links.py | tee links.log; exit ${PIPESTATUS[0]}
+
+      - name: Open an issue if anything changed
+        if: steps.quotes.outcome == 'failure' || steps.watch.outcome == 'failure' || steps.links.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "The monthly source check found something that may have changed. Review the site against it, update \`assets/data.js\` or \`assets/refs.js\` if needed, then update \`window.CHECKED\` in \`assets/refs.js\`."
+            echo; echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            for f in quotes watch links; do echo; echo "### $f"; echo '```'; cat $f.log 2>/dev/null | tail -40; echo '```'; done
+          } > body.md
+          gh issue create --title "Monthly source check: review needed ($(date -u +%Y-%m))" --body-file body.md
+          exit 1

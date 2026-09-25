@@ -10,9 +10,9 @@
 <meta property="og:description" content="Eight NASA sources, what each contributed, and where they disagree.">
 <meta property="og:image" content="https://moonbase.swapniltamse.com/assets/og.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23b9b9bb%22/%3E%3Ccircle cx=%2216%22 cy=%2226%22 r=%223.5%22 fill=%22%23f64137%22/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="../assets/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/public-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/fonts.css">
 <link rel="stylesheet" href="../assets/site.css">
 <link rel="stylesheet" href="../assets/moonbase.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
@@ -56,6 +56,7 @@
   <div class="wrap">
     <h1 id="hero-title">Where every number comes from</h1>
     <p class="deck">Eight NASA sources, every quote checked against its own text. What each one contributed, and the nine places where they do not agree.</p>
+    <p class="srcnote" id="checked"></p>
   </div>
 </section>
 
@@ -94,6 +95,7 @@ $('cfs').innerHTML = window.CONFLICTS.map(c => `<div class="cf reveal in"><h3>${
 $('srcs').innerHTML = window.SOURCES.map(s => `<div class="srcrow reveal in" id="src-${s.tag}"><div class="tg">${s.tag === 'T' ? 'T1–T4' : s.tag}</div>
   <div><h3><a href="${s.url}" target="_blank" rel="noopener">${s.title}</a></h3>
   <div class="meta">${s.org}, ${s.date}</div><p>${s.note}</p></div></div>`).join('');
+$('checked').innerHTML = `Sources last checked ${window.CHECKED}. NASA pages change, so dates and numbers here can age. Every figure on the site is also available as <a href="../assets/moonbase-data.json" download>JSON</a> or <a href="../assets/moonbase-data.csv" download>CSV</a>.`;
 $('unread').innerHTML = window.UNREAD.map(s => `<div class="srcrow"><div class="tg">—</div><div><h3>${s.title}</h3><p>${s.why}</p></div></div>`).join('');
 </script>
 </body>

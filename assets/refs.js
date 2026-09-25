@@ -4,6 +4,9 @@
    Services Requirements · LN LunaNet Interoperability Spec v5 · AFS Augmented
    Forward Signal standard · ADD Moon to Mars Architecture Definition Doc Rev C
    · FS Ignition "Building the Moon Base" fact sheet · WEB nasa.gov pages. */
+/* When every source link and quoted figure was last re-checked. */
+window.CHECKED = "September 24, 2026";
+
 window.SOURCES = [
   { tag: "T", title: "Lunar Communications, PNT and Observability Industry Demand Signal", org: "NASA SCaN", date: "August 28, 2026",
     url: "https://www.nasa.gov/wp-content/uploads/2026/08/scan-cislunar-industry-demand-signal.pdf",

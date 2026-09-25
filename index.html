@@ -20,9 +20,9 @@
 <meta name="twitter:title" content="What it takes to put the Moon online">
 <meta name="twitter:description" content="What it takes to give a lunar base a connection, a map and a clock. NASA's own numbers, one phase at a time.">
 <meta name="twitter:image" content="https://moonbase.swapniltamse.com/assets/og.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/inter-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/public-sans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/site.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <link rel="stylesheet" href="assets/moonbase.css">
@@ -54,7 +54,7 @@
     <div class="hero-globe">
       <div class="globe-holder">
         <canvas id="globe" tabindex="0" role="img" aria-label="The lunar South Pole, showing the service region, surface sites and relay satellites for the selected phase."></canvas>
-        <img class="fallimg" id="fallimg" src="assets/moon-surface.jpg" alt="">
+        <img class="fallimg" id="fallimg" data-src="assets/moon-surface.jpg" alt="">
         <div class="marklayer" id="marks"></div>
         <div class="loading" id="loading">Loading the Moon…</div>
       </div>
@@ -71,6 +71,18 @@
       </div>
       <p class="gcap">Drag to turn it. The service region and its height are to scale. Site positions, relay orbits and relay counts are schematic, because the paper sets coverage targets, not a constellation design. Older relay requirements start the first zone at 80° S: <a href="standards/#relays">see how the relays arrive</a>.</p>
     </div>
+  </div>
+</section>
+
+<section class="glance" aria-labelledby="glance-title">
+  <div class="wrap">
+    <h2 id="glance-title">The short version: where Phase 3 is headed, 2033 and beyond</h2>
+    <dl class="glance-grid">
+      <div><dt>1,250+<small>Mbps</small></dt><dd>relay data rate goal, 25 times the 2028 figure <span class="ref" title="Table 2">T2</span></dd></div>
+      <div><dt>99%</dt><dd>of each day with relay coverage, up from 50% in Phase 1 <span class="ref" title="Table 2">T2</span></dd></div>
+      <div><dt>10<small>m</small></dt><dd>how precisely you can know where you are on the surface, down from 50 m <span class="ref" title="Table 3">T3</span></dd></div>
+      <div><dt>~150,000<small>kg</small></dt><dd>of cargo landed in Phase 3, up from about 4,000 kg in Phase 1 <span class="ref ug" title="Moon Base User's Guide, page 4">UG 4</span></dd></div>
+    </dl>
   </div>
 </section>
 
@@ -157,7 +169,7 @@
         <div class="ukey"><span><i class="kh"></i>High rate</span><span><i class="kl"></i>Low rate</span><span>+ means "or more"</span></div>
         <div class="callout" id="aggcall"></div>
       </div>
-      <div class="card w5 reveal">
+      <div class="card w5 reveal fold">
         <h3>Data per day <span class="ref" title="Table 2">T2</span></h3>
         <div class="cs">Recorded data sent home later, not live.</div>
         <div class="vol">
@@ -166,13 +178,13 @@
           <div class="vrow"><div class="vk">Small missions, such as commercial landers.</div><div class="big" id="v-small"></div></div>
         </div>
       </div>
-      <div class="card w12 reveal">
+      <div class="card w12 reveal fold">
         <h3>What Phase 1 is supposed to deliver <span class="ref ug" title="Moon Base User's Guide, page 8">UG 8</span></h3>
         <div class="cs">The User's Guide sets its own communications targets for the first phase.</div>
         <ul class="goals" id="ctargets" style="margin-top:0"></ul>
         <div class="note">For comparison, the SCaN table <span class="ref" title="Table 2">T2</span> puts relay throughput at 50 Mbps in 2028 and 550 Mbps in 2032. One is a capability target and the other a demand forecast, so this site shows both and does not try to reconcile them.</div>
       </div>
-      <div class="card w12 reveal">
+      <div class="card w12 reveal fold">
         <h3>The links themselves</h3>
         <div class="cards linkgrid" style="gap:14px">
           <div class="lcell"><div class="lbl">Radio <span class="ref" title="Section III, Communications">§III</span></div><div id="l-links" style="margin-top:6px"></div></div>
@@ -201,11 +213,11 @@
         <div id="navstats"></div>
         <div class="note" id="navnote"></div>
       </div>
-      <div class="card w12 reveal">
+      <div class="card w12 reveal fold">
         <h3>Why the clock matters</h3>
         <div class="cs" style="margin-bottom:0">Radio navigation measures distance with time: how long a signal took to arrive. Light covers about 300 metres in a microsecond <span class="mine" title="Physics, not from the paper">for scale, mine</span>, which is why the timing targets are so tight. The service must also run on its own time scale, Coordinated Lunar Time, traced back to UTC on Earth.</div>
       </div>
-      <div class="card w12 reveal">
+      <div class="card w12 reveal fold">
         <h3>Problems still open <span class="ref ug" title="Moon Base User's Guide, pages 12 and 13">UG 12–13</span></h3>
         <div class="cs">Technology challenges the guide lists that touch the network directly.</div>
         <div class="tlist" id="netch"></div>
@@ -237,7 +249,7 @@
         <div class="week" id="wk-pole" aria-hidden="true"></div>
         <div class="axis"><span>One week, 168 hours. Each tick is a pass.</span></div>
       </div>
-      <div class="card w12 reveal">
+      <div class="card w12 reveal fold">
         <h3>Also on the list <span class="ref" title="Table 4">T4</span></h3>
         <div class="chips" id="o-extra"></div>
       </div>
@@ -253,7 +265,7 @@
         <h3>The place <span class="ref ug" title="Moon Base User's Guide, page 7">UG 7</span></h3>
         <div class="asks" id="env" style="margin-top:10px"></div>
       </div>
-      <div class="card w12 reveal">
+      <div class="card w12 reveal fold">
         <h3>Phase 1 targets, by system <span class="ref ug" title="Moon Base User's Guide, pages 8 to 10">UG 8–10</span></h3>
         <div class="asks" id="serves" style="margin-top:10px"></div>
       </div>
@@ -271,7 +283,7 @@
       <h3>What a security engineer notices</h3>
       <p>Relays that cannot read your data, a navigation signal that has to prove itself, and why custody matters. My notes, from a career in financial-services security.</p>
     </a>
-    <div class="card w12" style="margin-top:48px">
+    <div class="card w12 fold" style="margin-top:48px">
       <h3>Long-term partnership areas <span class="ref ug" title="Moon Base User's Guide, page 15">UG 15</span></h3>
       <div class="cs">Beyond the immediate gaps, the guide names areas where NASA wants lasting partners.</div>
       <div class="chips" id="partners"></div>
@@ -288,6 +300,7 @@
       <a id="srclink3" href="#" target="_blank" rel="noopener">SCaN demand signal (PDF, August 28, 2026)</a><br>
       <a class="uglink" href="#" target="_blank" rel="noopener">Moon Base User's Guide (PDF, April 2026)</a><br>
       <a href="sources/">All eight sources, and where they disagree</a><br>
+      <a href="assets/moonbase-data.json" download>Download every figure (JSON)</a> or <a href="assets/moonbase-data.csv" download>(CSV)</a><br>
       <a href="how-it-works/">How this site is built</a><br>
       <a href="https://github.com/swapniltamse/moonbase-explainer">Source code on GitHub (MIT License)</a>
     </p>
@@ -297,7 +310,6 @@
 
 <script src="assets/site.js"></script>
 <script src="assets/data.js"></script>
-<script src="assets/three.min.js"></script>
 <script>
 const D = window.DEMAND, S = window.SCALE, G = window.GUIDE;
 document.querySelectorAll('.uglink').forEach(a => { a.href = G.source.url; });
@@ -339,9 +351,10 @@ addEventListener('keydown', e => {
 });
 
 /* ---------- Phase card ---------- */
+let pcardReady = false;
 onPhase(p => {
-  const c = $('pcard'); c.classList.add('swap');
-  setTimeout(() => {
+  const c = $('pcard');
+  const fill = () => {
     $('ptag').textContent = `Phase ${p.n}, ${p.years.toLowerCase()}`;
     $('pname').textContent = p.name;
     $('pstory').textContent = p.story;
@@ -351,7 +364,9 @@ onPhase(p => {
     $('f-relay').textContent = p.comms.relayAvailLabel;
     $('pgoals').innerHTML = G.traffic[p.n - 1].goals.map(g => `<li>${g}</li>`).join('');
     c.classList.remove('swap');
-  }, 140);
+  };
+  if (!pcardReady) { pcardReady = true; fill(); return; }   /* no delay on first paint: nothing below it moves */
+  c.classList.add('swap'); setTimeout(fill, 140);
 });
 
 /* ---------- Traffic (User's Guide, page 4) ---------- */
@@ -525,9 +540,9 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
    direction of Earth. "Close-up" flies down over the pole so the service region,
    its height and the sites fill the frame. Motion can be paused (WCAG 2.2.2)
    and starts paused when the system asks for reduced motion. */
-(function () {
+function initGlobe() {
   const canvas = $('globe'), holder = canvas.parentElement, marks = $('marks'), loading = $('loading');
-  function fallback() { loading.style.display = 'none'; canvas.style.display = 'none'; marks.style.display = 'none'; $('fallimg').style.display = 'block'; }
+  function fallback() { loading.style.display = 'none'; canvas.style.display = 'none'; marks.style.display = 'none'; const f = $('fallimg'); f.src = f.dataset.src; f.style.display = 'block'; }
   if (!window.THREE) { fallback(); return; }
   let renderer; try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { fallback(); return; }
 
@@ -615,7 +630,8 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
   dwe.computeLineDistances(); scene.add(dwe);
 
   let target = { alt: 125, sites: 1, relays: 2, dweOp: 0.9 }, cur = { alt: 125 };
-  onPhase(p => { target = { alt: p.region.alt, sites: p.region.sites, relays: RELAYS_PER_PHASE[p.n - 1], dweOp: p.n === 1 ? 0.9 : 0.35 }; });
+  const setTarget = p => { target = { alt: p.region.alt, sites: p.region.sites, relays: RELAYS_PER_PHASE[p.n - 1], dweOp: p.n === 1 ? 0.9 : 0.35 }; };
+  onPhase(setTarget); setTarget(D.phases[phase]);   /* started late, so catch up with the current phase */
 
   new THREE.TextureLoader().load('assets/moon-surface.jpg', t => {
     if ('SRGBColorSpace' in THREE) t.colorSpace = THREE.SRGBColorSpace;
@@ -709,8 +725,16 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
   const place = (el, p, op) => { el.style.left = p.x + 'px'; el.style.top = p.y + 'px'; el.style.opacity = op; };
   const visible = (pt, camPos) => pt.clone().normalize().dot(tmp.copy(camPos).sub(pt).normalize()) > 0.02;
   let lastT = performance.now();
+  const setText = (el, t) => { const n = el.querySelector('.t'); if (n.textContent !== t) n.textContent = t; };
+
+  /* Draw only while the globe is on screen and the tab is visible. */
+  let onscreen = true, running = false;
+  const kick = () => { if (!running && onscreen && !document.hidden) { running = true; lastT = performance.now(); requestAnimationFrame(loop); } };
+  new IntersectionObserver(es => { onscreen = es[0].isIntersecting; kick(); }).observe(holder);
+  document.addEventListener('visibilitychange', kick);
 
   function loop(now) {
+    if (!onscreen || document.hidden) { running = false; return; }
     const dt = Math.min(0.05, (now - lastT) / 1000); lastT = now;
     const k = 1 - Math.pow(0.02, dt), kc = 1 - Math.pow(0.08, dt);
     if (!paused && !dragging) az += dt * (view === 'whole' ? 0.07 : 0.035);
@@ -755,10 +779,10 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
     /* Labels: the pole in the whole view; the region, its height and a scale bar up close. */
     const poleQ = toPx(POLE.clone().multiplyScalar(rr), w, h);
     place(L.pole, poleQ, 1 - closeness);
-    L.region.querySelector('.t').textContent = 'Service region, 84° S to the pole';
+    setText(L.region, 'Service region, 84° S to the pole');
     let top = null; for (let i = 0; i < 360; i += 10) { const q = toPx(dir(D.region.latFrom, i - 180).multiplyScalar(rr), w, h); if (!top || q.y < top.y) top = q; }
     place(L.region, top, closeness);
-    L.height.querySelector('.t').textContent = `${target.alt} km up`;
+    setText(L.height, `${target.alt} km up`);
     place(L.height, toPx(POLE.clone().multiplyScalar(1 + (rr - 1) / 2), w, h), closeness);
     if (relayLabelAt) place(L.relay, relayLabelAt, 1 - closeness); else L.relay.style.opacity = 0;
     const eq = toPx(EARTH.clone().multiplyScalar(1.12).add(new THREE.Vector3(0, -0.45, 0)), w, h);
@@ -772,7 +796,21 @@ $('asks').innerHTML = D.asks.map((a, i) => `<div class="ask"><h3>${a.k}</h3><p>$
     renderer.render(scene, camera);
     requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+  kick();
+}
+
+/* Load three.js (600 KB) only when the globe is about to scroll into view. */
+(function () {
+  const holder = $('globe').parentElement;
+  const start = () => {
+    const sc = document.createElement('script'); sc.src = 'assets/three.min.js';
+    sc.onload = initGlobe;
+    sc.onerror = () => { const f = $('fallimg'); f.src = f.dataset.src; f.style.display = 'block'; $('loading').style.display = 'none'; };
+    document.head.appendChild(sc);
+  };
+  if (!('IntersectionObserver' in window)) { start(); return; }
+  const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '300px' });
+  io.observe(holder);
 })();
 
 /* Start: ?phase=2 deep-links a phase. */

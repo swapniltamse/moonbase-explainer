@@ -1,0 +1,75 @@
+phase,area,metric,value,unit,source
+1,Region,Service altitude,125,km,T1
+1,Region,Surface sites,1,,T1
+1,Region,Assets per site,Up to 3,,T1
+1,Communications,Relay coverage and availability,50%,of each Earth day,T2
+1,Communications,Ground station availability,99%,of each Earth day,T2
+1,Communications,Relay return throughput (2028),50,Mbps,T2
+1,Communications,Direct-with-Earth return throughput (2027),50,Mbps,T2
+1,Communications,Direct-with-Earth return throughput (2028),100,Mbps,T2
+1,Communications,Aggregate forward throughput,25,Mbps,T2
+1,Communications,"Concurrent high-rate relay users, no aggregation",1+,users,T2
+1,Communications,"Concurrent high-rate relay users, with aggregation",Limited / demonstration,users,T2
+1,Communications,Large mission data volume,100,GB per day,T2
+1,Navigation,Surface position knowledge (3-sigma),50,m,T3
+1,Navigation,"Ascent and descent position knowledge, per axis",100,m,T3
+1,Navigation,Velocity knowledge,Limited,,T3
+1,Navigation,Service availability,Limited / Demonstration,,T3
+1,Navigation,Time knowledge,1 µs,,T3
+1,Navigation,Lunar time traced to UTC,1000 ns,,T3
+1,Observation,Surface sample distance,"50 cm threshold, 30 cm target",,T4
+1,Observation,"Revisit, Moon Base region",3 hours,,T4
+1,Observation,"Revisit, South Pole region",Limited,,T4
+1,Traffic,Launches,25,,UG 4
+1,Traffic,Landings,21,,UG 4
+1,Traffic,Payload to the surface (approx.),4000,kg,UG 4
+2,Region,Service altitude,200,km,T1
+2,Region,Surface sites,3,,T1
+2,Region,Assets per site,3 to 5,,T1
+2,Communications,Relay coverage and availability,> 90%,of each Earth day,T2
+2,Communications,Ground station availability,99%,of each Earth day,T2
+2,Communications,Relay return throughput (2030),300,Mbps,T2
+2,Communications,Relay return throughput (2032),550,Mbps,T2
+2,Communications,Direct-with-Earth return throughput,200,Mbps,T2
+2,Communications,Aggregate forward throughput,200,Mbps,T2
+2,Communications,"Concurrent high-rate relay users, no aggregation (2030)",6+,users,T2
+2,Communications,"Concurrent high-rate relay users, with aggregation (2030)",4+,users,T2
+2,Communications,"Concurrent high-rate relay users, no aggregation (2032)",10+,users,T2
+2,Communications,"Concurrent high-rate relay users, with aggregation (2032)",6+,users,T2
+2,Communications,Large mission data volume,650,GB per day,T2
+2,Navigation,Surface position knowledge (3-sigma),25,m,T3
+2,Navigation,"Ascent and descent position knowledge, per axis",50,m,T3
+2,Navigation,Velocity knowledge,0.1 m/s,,T3
+2,Navigation,Service availability,80%,,T3
+2,Navigation,Time knowledge,0.1 µs,,T3
+2,Navigation,Lunar time traced to UTC,100 ns,,T3
+2,Observation,Surface sample distance,30 cm or finer,,T4
+2,Observation,"Revisit, Moon Base region",3 hours,,T4
+2,Observation,"Revisit, South Pole region",168 hours,,T4
+2,Traffic,Launches,27,,UG 4
+2,Traffic,Landings,24,,UG 4
+2,Traffic,Payload to the surface (approx.),60000,kg,UG 4
+3,Region,Service altitude,200,km,T1
+3,Region,Surface sites,3 to 5+,,T1
+3,Region,Assets per site,5+,,T1
+3,Communications,Relay coverage and availability,99%,of each Earth day,T2
+3,Communications,Ground station availability,99%,of each Earth day,T2
+3,Communications,Relay return throughput (2034),850,Mbps,T2
+3,Communications,Relay return throughput (Goal),1250+,Mbps,T2
+3,Communications,Direct-with-Earth return throughput,300,Mbps,T2
+3,Communications,Aggregate forward throughput,300,Mbps,T2
+3,Communications,"Concurrent high-rate relay users, no aggregation",20+,users,T2
+3,Communications,"Concurrent high-rate relay users, with aggregation",10+,users,T2
+3,Communications,Large mission data volume,3100,GB per day,T2
+3,Navigation,Surface position knowledge (3-sigma),10,m,T3
+3,Navigation,"Ascent and descent position knowledge, per axis",50,m,T3
+3,Navigation,Velocity knowledge,0.1 m/s,,T3
+3,Navigation,Service availability,99%,,T3
+3,Navigation,Time knowledge,0.1 µs,,T3
+3,Navigation,Lunar time traced to UTC,100 ns,,T3
+3,Observation,Surface sample distance,25 cm or finer,,T4
+3,Observation,"Revisit, Moon Base region",1.5 hours,,T4
+3,Observation,"Revisit, South Pole region",48 hours,,T4
+3,Traffic,Launches,29,,UG 4
+3,Traffic,Landings,28,,UG 4
+3,Traffic,Payload to the surface (approx.),150000,kg,UG 4

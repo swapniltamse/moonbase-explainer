@@ -1,0 +1,658 @@
+{
+  "title": "Wiring the Moon: every figure, by phase",
+  "site": "https://moonbase.swapniltamse.com",
+  "checked": "September 24, 2026",
+  "note": "Independent project, not affiliated with NASA. Source tags match the site: T1-T4 are tables in the SCaN demand signal, UG is the Moon Base User's Guide page.",
+  "sources": [
+    {
+      "tag": "T",
+      "title": "Lunar Communications, PNT and Observability Industry Demand Signal",
+      "org": "NASA SCaN",
+      "date": "August 28, 2026",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/08/scan-cislunar-industry-demand-signal.pdf"
+    },
+    {
+      "tag": "UG",
+      "title": "Moon Base User's Guide: Architecture Resources",
+      "org": "NASA",
+      "date": "April 2026",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/04/moon-base-architecture-users-guide.pdf"
+    },
+    {
+      "tag": "LN",
+      "title": "LunaNet Interoperability Specification, Version 5 (Baseline)",
+      "org": "NASA, ESA, JAXA",
+      "date": "January 29, 2025",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/02/lunanet-interoperability-specification-v5-baseline.pdf"
+    },
+    {
+      "tag": "AFS",
+      "title": "LunaNet Signal-In-Space Recommended Standard: Augmented Forward Signal, Vol. A, v1",
+      "org": "NASA, ESA, JAXA",
+      "date": "January 29, 2025",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/02/lunanet-signal-in-space-recommended-standard-augmented-forward-signal-vol-a.pdf"
+    },
+    {
+      "tag": "SRD",
+      "title": "Lunar Relay Services Requirements Document (ESC-LCRNS-REQ-0090) Rev B",
+      "org": "NASA Goddard, LCRNS project",
+      "date": "Baselined Dec 2022, last change Mar 2023, posted Aug 2025",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/08/lunar-relay-services-requirements-document-srd.pdf"
+    },
+    {
+      "tag": "ADD",
+      "title": "Moon to Mars Architecture Definition Document, Revision C",
+      "org": "NASA",
+      "date": "December 2025",
+      "url": "https://www.nasa.gov/wp-content/uploads/2025/12/add-revision-c-20251211.pdf"
+    },
+    {
+      "tag": "FS",
+      "title": "Building the Moon Base (Ignition fact sheet)",
+      "org": "NASA",
+      "date": "March 2026",
+      "url": "https://www.nasa.gov/wp-content/uploads/2026/03/building-the-moon-base-1.pdf"
+    },
+    {
+      "tag": "WEB",
+      "title": "NASA web pages: Moon Base, Moon Base phases, Moon Base systems, Artemis",
+      "org": "NASA",
+      "date": "Read September 22, 2026 (phases page updated August 24, 2026)",
+      "url": "https://www.nasa.gov/moonbase-phases/"
+    }
+  ],
+  "figures": [
+    {
+      "phase": 1,
+      "area": "Region",
+      "metric": "Service altitude",
+      "value": 125,
+      "unit": "km",
+      "source": "T1"
+    },
+    {
+      "phase": 1,
+      "area": "Region",
+      "metric": "Surface sites",
+      "value": "1",
+      "unit": "",
+      "source": "T1"
+    },
+    {
+      "phase": 1,
+      "area": "Region",
+      "metric": "Assets per site",
+      "value": "Up to 3",
+      "unit": "",
+      "source": "T1"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Relay coverage and availability",
+      "value": "50%",
+      "unit": "of each Earth day",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Ground station availability",
+      "value": "99%",
+      "unit": "of each Earth day",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Relay return throughput (2028)",
+      "value": "50",
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Direct-with-Earth return throughput (2027)",
+      "value": 50,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Direct-with-Earth return throughput (2028)",
+      "value": 100,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Aggregate forward throughput",
+      "value": 25,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, no aggregation",
+      "value": "1+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, with aggregation",
+      "value": "Limited / demonstration",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Communications",
+      "metric": "Large mission data volume",
+      "value": 100,
+      "unit": "GB per day",
+      "source": "T2"
+    },
+    {
+      "phase": 1,
+      "area": "Navigation",
+      "metric": "Surface position knowledge (3-sigma)",
+      "value": 50,
+      "unit": "m",
+      "source": "T3"
+    },
+    {
+      "phase": 1,
+      "area": "Navigation",
+      "metric": "Ascent and descent position knowledge, per axis",
+      "value": 100,
+      "unit": "m",
+      "source": "T3"
+    },
+    {
+      "phase": 1,
+      "area": "Navigation",
+      "metric": "Velocity knowledge",
+      "value": "Limited",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 1,
+      "area": "Navigation",
+      "metric": "Service availability",
+      "value": "Limited / Demonstration",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 1,
+      "area": "Navigation",
+      "metric": "Time knowledge",
+      "value": "1 µs",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 1,
+      "area": "Navigation",
+      "metric": "Lunar time traced to UTC",
+      "value": "1000 ns",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 1,
+      "area": "Observation",
+      "metric": "Surface sample distance",
+      "value": "50 cm threshold, 30 cm target",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 1,
+      "area": "Observation",
+      "metric": "Revisit, Moon Base region",
+      "value": "3 hours",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 1,
+      "area": "Observation",
+      "metric": "Revisit, South Pole region",
+      "value": "Limited",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 1,
+      "area": "Traffic",
+      "metric": "Launches",
+      "value": 25,
+      "unit": "",
+      "source": "UG 4"
+    },
+    {
+      "phase": 1,
+      "area": "Traffic",
+      "metric": "Landings",
+      "value": 21,
+      "unit": "",
+      "source": "UG 4"
+    },
+    {
+      "phase": 1,
+      "area": "Traffic",
+      "metric": "Payload to the surface (approx.)",
+      "value": 4000,
+      "unit": "kg",
+      "source": "UG 4"
+    },
+    {
+      "phase": 2,
+      "area": "Region",
+      "metric": "Service altitude",
+      "value": 200,
+      "unit": "km",
+      "source": "T1"
+    },
+    {
+      "phase": 2,
+      "area": "Region",
+      "metric": "Surface sites",
+      "value": "3",
+      "unit": "",
+      "source": "T1"
+    },
+    {
+      "phase": 2,
+      "area": "Region",
+      "metric": "Assets per site",
+      "value": "3 to 5",
+      "unit": "",
+      "source": "T1"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Relay coverage and availability",
+      "value": "> 90%",
+      "unit": "of each Earth day",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Ground station availability",
+      "value": "99%",
+      "unit": "of each Earth day",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Relay return throughput (2030)",
+      "value": "300",
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Relay return throughput (2032)",
+      "value": "550",
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Direct-with-Earth return throughput",
+      "value": 200,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Aggregate forward throughput",
+      "value": 200,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, no aggregation (2030)",
+      "value": "6+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, with aggregation (2030)",
+      "value": "4+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, no aggregation (2032)",
+      "value": "10+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, with aggregation (2032)",
+      "value": "6+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Communications",
+      "metric": "Large mission data volume",
+      "value": 650,
+      "unit": "GB per day",
+      "source": "T2"
+    },
+    {
+      "phase": 2,
+      "area": "Navigation",
+      "metric": "Surface position knowledge (3-sigma)",
+      "value": 25,
+      "unit": "m",
+      "source": "T3"
+    },
+    {
+      "phase": 2,
+      "area": "Navigation",
+      "metric": "Ascent and descent position knowledge, per axis",
+      "value": 50,
+      "unit": "m",
+      "source": "T3"
+    },
+    {
+      "phase": 2,
+      "area": "Navigation",
+      "metric": "Velocity knowledge",
+      "value": "0.1 m/s",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 2,
+      "area": "Navigation",
+      "metric": "Service availability",
+      "value": "80%",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 2,
+      "area": "Navigation",
+      "metric": "Time knowledge",
+      "value": "0.1 µs",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 2,
+      "area": "Navigation",
+      "metric": "Lunar time traced to UTC",
+      "value": "100 ns",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 2,
+      "area": "Observation",
+      "metric": "Surface sample distance",
+      "value": "30 cm or finer",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 2,
+      "area": "Observation",
+      "metric": "Revisit, Moon Base region",
+      "value": "3 hours",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 2,
+      "area": "Observation",
+      "metric": "Revisit, South Pole region",
+      "value": "168 hours",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 2,
+      "area": "Traffic",
+      "metric": "Launches",
+      "value": 27,
+      "unit": "",
+      "source": "UG 4"
+    },
+    {
+      "phase": 2,
+      "area": "Traffic",
+      "metric": "Landings",
+      "value": 24,
+      "unit": "",
+      "source": "UG 4"
+    },
+    {
+      "phase": 2,
+      "area": "Traffic",
+      "metric": "Payload to the surface (approx.)",
+      "value": 60000,
+      "unit": "kg",
+      "source": "UG 4"
+    },
+    {
+      "phase": 3,
+      "area": "Region",
+      "metric": "Service altitude",
+      "value": 200,
+      "unit": "km",
+      "source": "T1"
+    },
+    {
+      "phase": 3,
+      "area": "Region",
+      "metric": "Surface sites",
+      "value": "3 to 5+",
+      "unit": "",
+      "source": "T1"
+    },
+    {
+      "phase": 3,
+      "area": "Region",
+      "metric": "Assets per site",
+      "value": "5+",
+      "unit": "",
+      "source": "T1"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Relay coverage and availability",
+      "value": "99%",
+      "unit": "of each Earth day",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Ground station availability",
+      "value": "99%",
+      "unit": "of each Earth day",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Relay return throughput (2034)",
+      "value": "850",
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Relay return throughput (Goal)",
+      "value": "1250+",
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Direct-with-Earth return throughput",
+      "value": 300,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Aggregate forward throughput",
+      "value": 300,
+      "unit": "Mbps",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, no aggregation",
+      "value": "20+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Concurrent high-rate relay users, with aggregation",
+      "value": "10+",
+      "unit": "users",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Communications",
+      "metric": "Large mission data volume",
+      "value": 3100,
+      "unit": "GB per day",
+      "source": "T2"
+    },
+    {
+      "phase": 3,
+      "area": "Navigation",
+      "metric": "Surface position knowledge (3-sigma)",
+      "value": 10,
+      "unit": "m",
+      "source": "T3"
+    },
+    {
+      "phase": 3,
+      "area": "Navigation",
+      "metric": "Ascent and descent position knowledge, per axis",
+      "value": 50,
+      "unit": "m",
+      "source": "T3"
+    },
+    {
+      "phase": 3,
+      "area": "Navigation",
+      "metric": "Velocity knowledge",
+      "value": "0.1 m/s",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 3,
+      "area": "Navigation",
+      "metric": "Service availability",
+      "value": "99%",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 3,
+      "area": "Navigation",
+      "metric": "Time knowledge",
+      "value": "0.1 µs",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 3,
+      "area": "Navigation",
+      "metric": "Lunar time traced to UTC",
+      "value": "100 ns",
+      "unit": "",
+      "source": "T3"
+    },
+    {
+      "phase": 3,
+      "area": "Observation",
+      "metric": "Surface sample distance",
+      "value": "25 cm or finer",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 3,
+      "area": "Observation",
+      "metric": "Revisit, Moon Base region",
+      "value": "1.5 hours",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 3,
+      "area": "Observation",
+      "metric": "Revisit, South Pole region",
+      "value": "48 hours",
+      "unit": "",
+      "source": "T4"
+    },
+    {
+      "phase": 3,
+      "area": "Traffic",
+      "metric": "Launches",
+      "value": 29,
+      "unit": "",
+      "source": "UG 4"
+    },
+    {
+      "phase": 3,
+      "area": "Traffic",
+      "metric": "Landings",
+      "value": 28,
+      "unit": "",
+      "source": "UG 4"
+    },
+    {
+      "phase": 3,
+      "area": "Traffic",
+      "metric": "Payload to the surface (approx.)",
+      "value": 150000,
+      "unit": "kg",
+      "source": "UG 4"
+    }
+  ]
+}

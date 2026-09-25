@@ -1,0 +1,406 @@
+{
+  "docs": {
+    "T": "https://www.nasa.gov/wp-content/uploads/2026/08/scan-cislunar-industry-demand-signal.pdf",
+    "UG": "https://www.nasa.gov/wp-content/uploads/2026/04/moon-base-architecture-users-guide.pdf",
+    "LN": "https://www.nasa.gov/wp-content/uploads/2025/02/lunanet-interoperability-specification-v5-baseline.pdf",
+    "AFS": "https://www.nasa.gov/wp-content/uploads/2025/02/lunanet-signal-in-space-recommended-standard-augmented-forward-signal-vol-a.pdf",
+    "SRD": "https://www.nasa.gov/wp-content/uploads/2025/08/lunar-relay-services-requirements-document-srd.pdf",
+    "ADD": "https://www.nasa.gov/wp-content/uploads/2025/12/add-revision-c-20251211.pdf",
+    "FS": "https://www.nasa.gov/wp-content/uploads/2026/03/building-the-moon-base-1.pdf"
+  },
+  "quotes": [
+    {
+      "doc": "T",
+      "text": "Phase 1 (Now-2028)",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "1250+ Mbps (Goal)",
+      "pages": [
+        2
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "3100 GB/day",
+      "pages": [
+        2
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "50 cm (Threshold)",
+      "pages": [
+        4
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "Time to First Fix",
+      "pages": [
+        3
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "LTC Trace to UTC",
+      "pages": [
+        3
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "Lunar South Pole Region: Latitude",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "doc": "T",
+      "text": "Wi-Fi, 3GPP",
+      "pages": [
+        2
+      ]
+    },
+    {
+      "doc": "UG",
+      "text": "25 LAUNCHES",
+      "pages": [
+        4
+      ]
+    },
+    {
+      "doc": "UG",
+      "text": "21 LANDINGS",
+      "pages": [
+        4
+      ]
+    },
+    {
+      "doc": "UG",
+      "text": "enable > 500Mbps",
+      "pages": [
+        8
+      ]
+    },
+    {
+      "doc": "UG",
+      "text": "HQ-MoonBase@nasa.gov",
+      "pages": [
+        15
+      ]
+    },
+    {
+      "doc": "UG",
+      "text": "survival through 120+ hours of darkness",
+      "pages": [
+        10
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "network of cooperating networks",
+      "pages": [
+        2,
+        9
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "LunaNet 1.0, will include",
+      "pages": [
+        9
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "appears as a single provider",
+      "pages": [
+        15
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "explicitly deals with long delays",
+      "pages": [
+        18
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "IPv6",
+      "pages": [
+        47
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "Bundle Protocol version 7",
+      "pages": [
+        21
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "restricts use of S-band to lunar proximity",
+      "pages": [
+        39
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "15.625",
+      "pages": [
+        45,
+        46,
+        99,
+        101,
+        103
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "optical link interfaces are TBD",
+      "pages": [
+        37,
+        116
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "IP over Wi-Fi",
+      "pages": [
+        21
+      ]
+    },
+    {
+      "doc": "LN",
+      "text": "22.55-23.15",
+      "pages": [
+        45,
+        94,
+        122,
+        123,
+        131,
+        132
+      ]
+    },
+    {
+      "doc": "AFS",
+      "text": "2492.028 MHz",
+      "pages": [
+        14
+      ]
+    },
+    {
+      "doc": "AFS",
+      "text": "Similar to the GPS C/A code",
+      "pages": [
+        47
+      ]
+    },
+    {
+      "doc": "AFS",
+      "text": "Clock and ephemeris",
+      "pages": [
+        31
+      ]
+    },
+    {
+      "doc": "AFS",
+      "text": "40 {LSIS-TBC-2001}",
+      "pages": [
+        13
+      ]
+    },
+    {
+      "doc": "AFS",
+      "text": "5.115",
+      "pages": [
+        18
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "a few relays in lunar orbit",
+      "pages": [
+        10
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "below - 80 degrees",
+      "pages": [
+        13
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "full global coverage",
+      "pages": [
+        14
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "5 seconds end-to-end",
+      "pages": [
+        27
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "Earth Independent Services",
+      "pages": [
+        27,
+        54
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "DTN BPv7 with custody",
+      "pages": [
+        38,
+        60
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "FIPS 140-3 certified",
+      "pages": [
+        45,
+        64
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "no decryption of user data",
+      "pages": [
+        27
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "LCRNS.3.0730",
+      "pages": [
+        45,
+        64
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "within 5 minutes",
+      "pages": [
+        6,
+        43,
+        62,
+        63
+      ]
+    },
+    {
+      "doc": "SRD",
+      "text": "50 meters [TBR]",
+      "pages": [
+        44,
+        63
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "80° S to the South Pole",
+      "pages": [
+        66
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "75° S and up to 200 km",
+      "pages": [
+        66
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "called Moonlight",
+      "pages": [
+        86
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "3GPP/5G",
+      "pages": [
+        67
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "FN-C-205",
+      "pages": [
+        123,
+        141,
+        167
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "25 to 50 Mbps within 10 km",
+      "pages": [
+        206
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "40% of 24 hours",
+      "pages": [
+        204
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "within 10m, 3 sigma",
+      "pages": [
+        204
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "LROC NAC is ~.5 m/pixel",
+      "pages": [
+        265
+      ]
+    },
+    {
+      "doc": "ADD",
+      "text": "Sustained, site-specific sub-meter",
+      "pages": [
+        263,
+        265
+      ]
+    },
+    {
+      "doc": "FS",
+      "text": "38 tons of cargo per year",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "doc": "FS",
+      "text": "including 21 landings",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "doc": "FS",
+      "text": "up to 60 tons of cargo",
+      "pages": [
+        1
+      ]
+    }
+  ]
+}
